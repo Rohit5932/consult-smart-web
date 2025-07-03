@@ -57,7 +57,7 @@ const About = () => {
                 <span className="text-4xl">👨‍💼</span>
               </div>
               <h2 className="text-4xl font-bold mb-4">Meet Your Consultant</h2>
-              <h3 className="text-2xl text-primary mb-4">CA Rajesh Sharma</h3>
+              <h3 className="text-2xl text-primary mb-4">Shivam kumar</h3>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 With over 8 years of experience in taxation and business consulting, 
                 I help individuals and businesses navigate complex tax regulations and achieve financial compliance.

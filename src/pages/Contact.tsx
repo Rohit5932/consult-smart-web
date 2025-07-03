@@ -23,7 +23,7 @@ const Contact = () => {
 
   const handleWhatsApp = () => {
     const message = "Hi, I would like to inquire about your tax consulting services.";
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/919038603090?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -124,21 +124,21 @@ const Contact = () => {
                       <span className="text-2xl">📍</span>
                       <div>
                         <div className="font-semibold">Address</div>
-                        <div className="text-muted-foreground">123 Business District, Mumbai, Maharashtra 400001</div>
+                        <div className="text-muted-foreground">Main Road,UCO Bank,Barharwa-816101</div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <span className="text-2xl">📞</span>
                       <div>
                         <div className="font-semibold">Phone</div>
-                        <div className="text-muted-foreground">+91 98765 43210</div>
+                        <div className="text-muted-foreground">+91 9038603090</div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <span className="text-2xl">📧</span>
                       <div>
                         <div className="font-semibold">Email</div>
-                        <div className="text-muted-foreground">info@taxconsultpro.com</div>
+                        <div className="text-muted-foreground">ska.bhw@gmail.com</div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -174,7 +174,7 @@ const Contact = () => {
                       <div className="text-center text-muted-foreground">
                         <span className="text-4xl block mb-2">🗺️</span>
                         <p>Google Maps Integration</p>
-                        <p className="text-sm">123 Business District, Mumbai</p>
+                        <p className="text-sm">Main Road,UCO Bank,Barharwa-816101</p>
                       </div>
                     </div>
                   </CardContent>
