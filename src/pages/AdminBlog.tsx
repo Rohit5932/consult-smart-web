@@ -18,7 +18,7 @@ interface BlogPost {
 }
 
 const AdminBlog = () => {
-  const { isSignedIn, user } = useAuth();
+  const { isSignedIn } = useAuth();
   const [showEditor, setShowEditor] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | undefined>();
   const [posts, setPosts] = useState<BlogPost[]>([
