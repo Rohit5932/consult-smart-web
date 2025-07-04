@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { openWhatsAppChat, getDefaultWhatsAppMessage } from "@/utils/whatsapp";
 import SEO from "@/components/SEO";
+import BookingForm from "@/components/BookingForm";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -117,7 +118,7 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              {/* Contact Info & Map */}
+              {/* Contact Info & Booking */}
               <div className="space-y-8">
                 {/* Contact Information */}
                 <Card>
@@ -152,6 +153,17 @@ const Contact = () => {
                         <div className="font-semibold">Business Hours</div>
                         <div className="text-muted-foreground">Mon-Sat: 9:00 AM - 6:00 PM</div>
                       </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Booking Section */}
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center">
+                      <h3 className="font-semibold mb-2">Schedule a Consultation</h3>
+                      <p className="text-muted-foreground mb-4">Book a one-on-one consultation with our tax experts</p>
+                      <BookingForm />
                     </div>
                   </CardContent>
                 </Card>
