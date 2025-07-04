@@ -1,7 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import SEO from "@/components/SEO";
 
 const Index = () => {
   const featuredServices = [
@@ -11,7 +11,7 @@ const Index = () => {
       icon: "📋"
     },
     {
-      title: "Income Tax Returns",
+      title: "Income Tax Returns", 
       description: "Professional ITR filing for individuals and businesses",
       icon: "💼"
     },
@@ -42,6 +42,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title="TaxConsult Pro - Professional Tax & Business Consulting Services"
+        description="Expert tax filing, GST compliance, and business registration services in India. Professional tax consultant with 8+ years experience. Book consultation today."
+        keywords="tax consultant, GST filing, income tax returns, business registration, tax advisor, chartered accountant, India"
+      />
+      
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">

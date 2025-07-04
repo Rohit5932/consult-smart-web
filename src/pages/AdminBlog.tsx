@@ -1,56 +1,76 @@
-
 import { useState } from "react";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import BlogEditor from "@/components/BlogEditor";
+
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  tags: string[];
+  publishDate: string;
+  published: boolean;
+}
 
 const AdminBlog = () => {
-  const [articles, setArticles] = useState([
+  const { isSignedIn, user } = useAuth();
+  const [showEditor, setShowEditor] = useState(false);
+  const [editingPost, setEditingPost] = useState<BlogPost | undefined>();
+  const [posts, setPosts] = useState<BlogPost[]>([
     {
-      id: 1,
-      title: "GST Filing Deadlines for 2024",
-      excerpt: "Complete guide for GST filing deadlines",
+      id: "1",
+      title: "GST Filing Deadlines for 2024: Complete Guide",
+      excerpt: "Stay updated with all GST filing deadlines and avoid penalties. Complete guide for businesses.",
+      content: "# GST Filing Deadlines for 2024\n\nThis is the content...",
       category: "GST Updates",
-      date: "2024-03-15"
-    },
-    {
-      id: 2,
-      title: "Income Tax Exemptions Under Section 80C",
-      excerpt: "Maximize your tax savings with Section 80C",
-      category: "Tax Tips",
-      date: "2024-03-10"
+      tags: ["GST", "Deadlines", "2024"],
+      publishDate: "2024-03-15T00:00:00.000Z",
+      published: true
     }
   ]);
 
-  const [newArticle, setNewArticle] = useState({
-    title: "",
-    excerpt: "",
-    category: "",
-    content: ""
-  });
+  if (!isSignedIn) {
+    return <div className="flex items-center justify-center min-h-screen">Please sign in to access admin panel.</div>;
+  }
 
-  const addArticle = () => {
-    if (newArticle.title && newArticle.excerpt) {
-      setArticles([
-        ...articles,
-        {
-          ...newArticle,
-          id: Date.now(),
-          date: new Date().toISOString().split('T')[0]
-        }
-      ]);
-      setNewArticle({ title: "", excerpt: "", category: "", content: "" });
+  const handleSavePost = (post: Partial<BlogPost>) => {
+    if (editingPost) {
+      setPosts(posts.map(p => p.id === editingPost.id ? { ...p, ...post } : p));
+    } else {
+      setPosts([...posts, post as BlogPost]);
     }
+    setShowEditor(false);
+    setEditingPost(undefined);
   };
 
-  const deleteArticle = (id) => {
-    setArticles(articles.filter(article => article.id !== id));
+  const handleEditPost = (post: BlogPost) => {
+    setEditingPost(post);
+    setShowEditor(true);
   };
+
+  const handleDeletePost = (id: string) => {
+    setPosts(posts.filter(p => p.id !== id));
+  };
+
+  if (showEditor) {
+    return (
+      <div className="min-h-screen bg-background p-8">
+        <BlogEditor
+          post={editingPost}
+          onSave={handleSavePost}
+          onCancel={() => {
+            setShowEditor(false);
+            setEditingPost(undefined);
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,98 +78,61 @@ const AdminBlog = () => {
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
           <nav className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Admin - Blog Management</h1>
-            <div className="flex items-center space-x-4">
-              <Link to="/admin" className="hover:text-primary">Dashboard</Link>
-              <Link to="/" className="hover:text-primary">Back to Site</Link>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
+            <h1 className="text-2xl font-bold">TaxConsult Pro</h1>
+            <div className="space-x-4">
+              <Link to="/" className="hover:text-primary">Home</Link>
+              <Link to="/services" className="hover:text-primary">Services</Link>
+              <Link to="/about" className="hover:text-primary">About</Link>
+              <Link to="/contact" className="hover:text-primary">Contact</Link>
+              <Link to="/blog" className="hover:text-primary font-semibold">Blog</Link>
+              <Link to="/updates" className="hover:text-primary">Updates</Link>
             </div>
           </nav>
         </div>
       </header>
-
-      <SignedOut>
-        <div className="container mx-auto px-4 py-16 text-center">
-          <h2 className="text-3xl font-bold mb-4">Admin Access Required</h2>
-          <SignInButton>
-            <Button size="lg">Sign In</Button>
-          </SignInButton>
+      
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Blog Management</h1>
+          <Button onClick={() => setShowEditor(true)}>Create New Post</Button>
         </div>
-      </SignedOut>
 
-      <SignedIn>
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Manage Blog Posts</h2>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>Add New Article</Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Add New Blog Article</DialogTitle>
-                  <DialogDescription>Create a new blog post</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
+        <div className="grid gap-6">
+          {posts.map((post) => (
+            <Card key={post.id}>
+              <CardHeader>
+                <div className="flex justify-between items-start">
                   <div>
-                    <Label htmlFor="article-title">Article Title</Label>
-                    <Input
-                      id="article-title"
-                      value={newArticle.title}
-                      onChange={(e) => setNewArticle({...newArticle, title: e.target.value})}
-                      placeholder="Enter article title"
-                    />
+                    <CardTitle className="text-lg">{post.title}</CardTitle>
+                    <CardDescription className="mt-2">{post.excerpt}</CardDescription>
                   </div>
-                  <div>
-                    <Label htmlFor="excerpt">Excerpt</Label>
-                    <Input
-                      id="excerpt"
-                      value={newArticle.excerpt}
-                      onChange={(e) => setNewArticle({...newArticle, excerpt: e.target.value})}
-                      placeholder="Brief description of the article"
-                    />
+                  <div className="flex gap-2">
+                    <Badge variant={post.published ? "default" : "secondary"}>
+                      {post.published ? "Published" : "Draft"}
+                    </Badge>
+                    <Badge variant="outline">{post.category}</Badge>
                   </div>
-                  <div>
-                    <Label htmlFor="category">Category</Label>
-                    <Input
-                      id="category"
-                      value={newArticle.category}
-                      onChange={(e) => setNewArticle({...newArticle, category: e.target.value})}
-                      placeholder="e.g., Tax Tips, GST Updates"
-                    />
-                  </div>
-                  <Button onClick={addArticle} className="w-full">Publish Article</Button>
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {articles.map((article) => (
-              <Card key={article.id}>
-                <CardHeader>
-                  <div className="flex justify-between items-start mb-2">
-                    <Badge variant="secondary">{article.category}</Badge>
-                    <span className="text-sm text-muted-foreground">{article.date}</span>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-between items-center">
+                  <div className="text-sm text-muted-foreground">
+                    Published: {new Date(post.publishDate).toLocaleDateString()}
                   </div>
-                  <CardTitle className="text-lg">{article.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="mb-4">{article.excerpt}</CardDescription>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">Edit</Button>
-                    <Button variant="destructive" size="sm" onClick={() => deleteArticle(article.id)}>
+                  <div className="space-x-2">
+                    <Button variant="outline" size="sm" onClick={() => handleEditPost(post)}>
+                      Edit
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={() => handleDeletePost(post.id)}>
                       Delete
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      </SignedIn>
+      </div>
     </div>
   );
 };

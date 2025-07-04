@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { openWhatsAppChat, getDefaultWhatsAppMessage } from "@/utils/whatsapp";
+import SEO from "@/components/SEO";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -22,13 +23,17 @@ const Contact = () => {
   };
 
   const handleWhatsApp = () => {
-    const message = "Hi, I would like to inquire about your tax consulting services.";
-    const whatsappUrl = `https://wa.me/919038603090?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    openWhatsAppChat("919038603090", getDefaultWhatsAppMessage());
   };
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title="Contact Us - TaxConsult Pro"
+        description="Get in touch with TaxConsult Pro for professional tax and business consulting services. Contact form, WhatsApp chat available."
+        keywords="contact tax consultant, tax advisor contact, business consultant contact"
+      />
+      
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
