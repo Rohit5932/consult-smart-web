@@ -23,37 +23,39 @@ const Dashboard = () => {
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
-          <nav className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">TaxConsult Pro - Dashboard</h1>
+          <nav className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 className="text-xl md:text-2xl font-bold text-center md:text-left">TaxConsult Pro - Dashboard</h1>
             <div className="flex items-center space-x-4">
               <LanguageSwitcher />
-              <Link to="/" className="hover:text-primary">Back to Home</Link>
+              <Link to="/" className="hover:text-primary text-sm md:text-base">Back to Home</Link>
             </div>
           </nav>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid gap-8">
+      <div className="container mx-auto px-4 py-6 md:py-8">
+        <div className="grid gap-6 md:gap-8">
           {/* Tools Section */}
           <section>
-            <h2 className="text-2xl font-bold mb-6">Tax Tools & Calculators</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <GSTCalculator />
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Tax Tools & Calculators</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+              <div className="flex justify-center lg:justify-start">
+                <GSTCalculator />
+              </div>
             </div>
           </section>
 
           {/* Client Dashboard */}
           <section>
-            <h2 className="text-2xl font-bold mb-6">Client Portal</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Client Portal</h2>
             <ClientDashboard />
           </section>
 
           {/* Communication Tools */}
           <section>
-            <h2 className="text-2xl font-bold mb-6">Communication & CRM</h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Communication & CRM</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               <ZoomIntegration />
               <CRMIntegration />
             </div>
@@ -65,9 +67,9 @@ const Dashboard = () => {
       <AIChatbot />
 
       {/* Footer */}
-      <footer className="bg-muted py-8 mt-16">
+      <footer className="bg-muted py-6 md:py-8 mt-16">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-muted-foreground">{t('footer.copyright')}</p>
+          <p className="text-muted-foreground text-sm md:text-base">{t('footer.copyright')}</p>
         </div>
       </footer>
     </div>

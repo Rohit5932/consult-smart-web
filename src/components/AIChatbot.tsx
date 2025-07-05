@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, Send, Bot, User } from "lucide-react";
+import { MessageCircle, Send, Bot, User, X } from "lucide-react";
 
 interface Message {
   id: string;
@@ -84,9 +84,9 @@ const AIChatbot = () => {
       <div className="fixed bottom-4 right-4 z-50">
         <Button
           onClick={() => setIsOpen(true)}
-          className="rounded-full h-12 w-12 shadow-lg"
+          className="rounded-full h-12 w-12 md:h-14 md:w-14 shadow-lg"
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-5 w-5 md:h-6 md:w-6" />
         </Button>
       </div>
     );
@@ -94,24 +94,25 @@ const AIChatbot = () => {
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
-      <Card className="w-80 h-96 shadow-lg">
+      <Card className="w-80 md:w-96 h-80 md:h-96 shadow-lg">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Bot className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+              <Bot className="h-4 w-4 md:h-5 md:w-5" />
               Tax Assistant
             </CardTitle>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(false)}
+              className="h-8 w-8 p-0"
             >
-              ✕
+              <X className="h-4 w-4" />
             </Button>
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <ScrollArea className="h-60 px-4">
+          <ScrollArea className="h-48 md:h-60 px-4">
             <div className="space-y-3">
               {messages.map((message) => (
                 <div
@@ -121,10 +122,10 @@ const AIChatbot = () => {
                   }`}
                 >
                   {message.sender === "bot" && (
-                    <Bot className="h-6 w-6 text-blue-500 mt-1 flex-shrink-0" />
+                    <Bot className="h-5 w-5 md:h-6 md:w-6 text-blue-500 mt-1 flex-shrink-0" />
                   )}
                   <div
-                    className={`max-w-[70%] px-3 py-2 rounded-lg text-sm ${
+                    className={`max-w-[70%] px-3 py-2 rounded-lg text-xs md:text-sm ${
                       message.sender === "user"
                         ? "bg-blue-500 text-white"
                         : "bg-muted"
@@ -133,7 +134,7 @@ const AIChatbot = () => {
                     {message.text}
                   </div>
                   {message.sender === "user" && (
-                    <User className="h-6 w-6 text-gray-500 mt-1 flex-shrink-0" />
+                    <User className="h-5 w-5 md:h-6 md:w-6 text-gray-500 mt-1 flex-shrink-0" />
                   )}
                 </div>
               ))}
@@ -146,10 +147,10 @@ const AIChatbot = () => {
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Ask about taxes..."
-                className="text-sm"
+                className="text-xs md:text-sm"
               />
-              <Button size="sm" onClick={sendMessage}>
-                <Send className="h-4 w-4" />
+              <Button size="sm" onClick={sendMessage} className="px-3">
+                <Send className="h-3 w-3 md:h-4 md:w-4" />
               </Button>
             </div>
           </div>

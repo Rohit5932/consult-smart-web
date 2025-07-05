@@ -56,34 +56,34 @@ const Index = () => {
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
-          <nav className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">TaxConsult Pro</h1>
-            <div className="flex items-center space-x-4">
+          <nav className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 className="text-xl md:text-2xl font-bold">TaxConsult Pro</h1>
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 text-sm md:text-base">
               <LanguageSwitcher />
-              <Link to="/" className="hover:text-primary">{t('navigation.home')}</Link>
-              <Link to="/services" className="hover:text-primary">{t('navigation.services')}</Link>
-              <Link to="/about" className="hover:text-primary">{t('navigation.about')}</Link>
-              <Link to="/contact" className="hover:text-primary">{t('navigation.contact')}</Link>
-              <Link to="/blog" className="hover:text-primary">{t('navigation.blog')}</Link>
-              <Link to="/updates" className="hover:text-primary">{t('navigation.updates')}</Link>
-              <Link to="/dashboard" className="hover:text-primary bg-blue-100 px-3 py-1 rounded">Dashboard</Link>
+              <Link to="/" className="hover:text-primary px-2 py-1">{t('navigation.home')}</Link>
+              <Link to="/services" className="hover:text-primary px-2 py-1">{t('navigation.services')}</Link>
+              <Link to="/about" className="hover:text-primary px-2 py-1">{t('navigation.about')}</Link>
+              <Link to="/contact" className="hover:text-primary px-2 py-1">{t('navigation.contact')}</Link>
+              <Link to="/blog" className="hover:text-primary px-2 py-1">{t('navigation.blog')}</Link>
+              <Link to="/updates" className="hover:text-primary px-2 py-1">{t('navigation.updates')}</Link>
+              <Link to="/dashboard" className="hover:text-primary bg-blue-100 px-3 py-1 rounded text-sm md:text-base">Dashboard</Link>
             </div>
           </nav>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 text-center">
-        <div className="container mx-auto px-4">
-          <h2 className="text-5xl font-bold mb-4">{t('hero.title')}</h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+      <section className="py-12 md:py-20 text-center px-4">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">{t('hero.title')}</h2>
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             {t('hero.subtitle')}
           </p>
-          <div className="space-x-4">
-            <Button size="lg" asChild>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild className="w-full sm:w-auto">
               <Link to="/contact">{t('hero.bookNow')}</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" asChild className="w-full sm:w-auto">
               <Link to="/contact">{t('hero.contactUs')}</Link>
             </Button>
           </div>
@@ -93,16 +93,16 @@ const Index = () => {
       {/* Featured Services */}
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-center mb-12">{t('services.title')}</h3>
-          <div className="grid md:grid-cols-3 gap-8">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-12">{t('services.title')}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {featuredServices.map((service, index) => (
               <Card key={index} className="text-center">
                 <CardHeader>
                   <div className="text-4xl mb-4">{service.icon}</div>
-                  <CardTitle>{service.title}</CardTitle>
+                  <CardTitle className="text-lg md:text-xl">{service.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base">{service.description}</CardDescription>
+                  <CardDescription className="text-sm md:text-base">{service.description}</CardDescription>
                 </CardContent>
               </Card>
             ))}
@@ -113,14 +113,14 @@ const Index = () => {
       {/* Testimonials */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-center mb-12">{t('testimonials.title')}</h3>
-          <div className="grid md:grid-cols-3 gap-8">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-12">{t('testimonials.title')}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {testimonials.map((testimonial, index) => (
               <Card key={index}>
                 <CardContent className="pt-6">
                   <div className="mb-4">{testimonial.rating}</div>
-                  <p className="text-muted-foreground mb-4">"{testimonial.text}"</p>
-                  <p className="font-semibold">- {testimonial.name}</p>
+                  <p className="text-muted-foreground mb-4 text-sm md:text-base">"{testimonial.text}"</p>
+                  <p className="font-semibold text-sm md:text-base">- {testimonial.name}</p>
                 </CardContent>
               </Card>
             ))}
@@ -131,13 +131,13 @@ const Index = () => {
       {/* Call to Action */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl font-bold mb-4">{t('cta.title')}</h3>
-          <p className="text-xl mb-8">{t('cta.subtitle')}</p>
-          <div className="space-x-4">
-            <Button size="lg" variant="secondary" asChild>
+          <h3 className="text-2xl md:text-3xl font-bold mb-4">{t('cta.title')}</h3>
+          <p className="text-lg md:text-xl mb-8">{t('cta.subtitle')}</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto">
               <Link to="/contact">{t('cta.bookConsultation')}</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" asChild className="w-full sm:w-auto">
               <Link to="/contact">{t('hero.contactUs')}</Link>
             </Button>
           </div>
@@ -147,7 +147,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-muted py-8">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-muted-foreground">{t('footer.copyright')}</p>
+          <p className="text-muted-foreground text-sm md:text-base">{t('footer.copyright')}</p>
         </div>
       </footer>
     </div>

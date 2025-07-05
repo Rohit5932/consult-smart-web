@@ -76,30 +76,30 @@ const ClientDashboard = () => {
       cancelled: "destructive",
       pending: "secondary"
     };
-    return <Badge variant={variants[status] || "default"}>{status}</Badge>;
+    return <Badge variant={variants[status] || "default"} className="text-xs">{status}</Badge>;
   };
 
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Appointments */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+              <Calendar className="h-4 w-4 md:h-5 md:w-5" />
               My Appointments
             </CardTitle>
-            <CardDescription>Your scheduled and past appointments</CardDescription>
+            <CardDescription className="text-sm">Your scheduled and past appointments</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {appointments.map((appointment) => (
-                <div key={appointment.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={appointment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-3">
                   <div className="flex items-center gap-3">
                     {getStatusIcon(appointment.status)}
                     <div>
-                      <div className="font-medium">{appointment.service}</div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="font-medium text-sm md:text-base">{appointment.service}</div>
+                      <div className="text-xs md:text-sm text-muted-foreground">
                         {appointment.date} at {appointment.time}
                       </div>
                     </div>
@@ -108,7 +108,7 @@ const ClientDashboard = () => {
                 </div>
               ))}
             </div>
-            <Button className="w-full mt-4" variant="outline">
+            <Button className="w-full mt-4" variant="outline" size="sm">
               Book New Appointment
             </Button>
           </CardContent>
@@ -117,21 +117,21 @@ const ClientDashboard = () => {
         {/* Documents */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+              <FileText className="h-4 w-4 md:h-5 md:w-5" />
               My Documents
             </CardTitle>
-            <CardDescription>Track your document processing status</CardDescription>
+            <CardDescription className="text-sm">Track your document processing status</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {documents.map((document) => (
-                <div key={document.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={document.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-3">
                   <div className="flex items-center gap-3">
                     {getStatusIcon(document.status)}
                     <div>
-                      <div className="font-medium">{document.name}</div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="font-medium text-sm md:text-base">{document.name}</div>
+                      <div className="text-xs md:text-sm text-muted-foreground">
                         {document.type} • Uploaded {document.uploadDate}
                       </div>
                     </div>
@@ -140,7 +140,7 @@ const ClientDashboard = () => {
                 </div>
               ))}
             </div>
-            <Button className="w-full mt-4" variant="outline">
+            <Button className="w-full mt-4" variant="outline" size="sm">
               Upload Documents
             </Button>
           </CardContent>
@@ -150,25 +150,25 @@ const ClientDashboard = () => {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Frequently used services</CardDescription>
+          <CardTitle className="text-lg md:text-xl">Quick Actions</CardTitle>
+          <CardDescription className="text-sm">Frequently used services</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-20 flex flex-col">
-              <FileText className="h-6 w-6 mb-2" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            <Button variant="outline" className="h-16 md:h-20 flex flex-col text-xs md:text-sm">
+              <FileText className="h-4 w-4 md:h-6 md:w-6 mb-1 md:mb-2" />
               GST Filing
             </Button>
-            <Button variant="outline" className="h-20 flex flex-col">
-              <Calendar className="h-6 w-6 mb-2" />
+            <Button variant="outline" className="h-16 md:h-20 flex flex-col text-xs md:text-sm">
+              <Calendar className="h-4 w-4 md:h-6 md:w-6 mb-1 md:mb-2" />
               ITR Filing
             </Button>
-            <Button variant="outline" className="h-20 flex flex-col">
-              <CheckCircle className="h-6 w-6 mb-2" />
+            <Button variant="outline" className="h-16 md:h-20 flex flex-col text-xs md:text-sm">
+              <CheckCircle className="h-4 w-4 md:h-6 md:w-6 mb-1 md:mb-2" />
               Tax Planning
             </Button>
-            <Button variant="outline" className="h-20 flex flex-col">
-              <AlertCircle className="h-6 w-6 mb-2" />
+            <Button variant="outline" className="h-16 md:h-20 flex flex-col text-xs md:text-sm">
+              <AlertCircle className="h-4 w-4 md:h-6 md:w-6 mb-1 md:mb-2" />
               Compliance
             </Button>
           </div>
