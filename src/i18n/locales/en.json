@@ -1,0 +1,78 @@
+
+{
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "blog": "Blog",
+    "updates": "Updates"
+  },
+  "hero": {
+    "title": "Your Trusted Tax & Business Consultant",
+    "subtitle": "Professional tax filing, GST compliance, and business registration services. Get expert guidance for all your financial needs.",
+    "bookNow": "Book Now",
+    "contactUs": "Contact Us"
+  },
+  "services": {
+    "title": "Featured Services",
+    "gst": {
+      "title": "GST Registration & Filing",
+      "description": "Complete GST compliance and filing services"
+    },
+    "itr": {
+      "title": "Income Tax Returns",
+      "description": "Professional ITR filing for individuals and businesses"
+    },
+    "business": {
+      "title": "Business Registration",
+      "description": "Company registration and incorporation services"
+    }
+  },
+  "testimonials": {
+    "title": "What Our Clients Say"
+  },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "subtitle": "Contact us today for professional tax and business consulting services",
+    "bookConsultation": "Book Consultation"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with us for professional tax and business consulting services",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "send": "Send Message"
+    },
+    "info": {
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Business Hours"
+    }
+  },
+  "gstCalculator": {
+    "title": "GST Calculator",
+    "description": "Calculate GST for your business transactions",
+    "amount": "Amount (₹)",
+    "gstRate": "GST Rate (%)",
+    "calculationType": "Calculation Type",
+    "calculate": "Calculate",
+    "clear": "Clear",
+    "result": "Calculation Result:",
+    "baseAmount": "Base Amount:",
+    "gstAmount": "GST Amount",
+    "totalAmount": "Total Amount:"
+  },
+  "dashboard": {
+    "appointments": "My Appointments",
+    "documents": "My Documents",
+    "quickActions": "Quick Actions"
+  },
+  "footer": {
+    "copyright": "© 2024 TaxConsult Pro. All rights reserved."
+  }
+}

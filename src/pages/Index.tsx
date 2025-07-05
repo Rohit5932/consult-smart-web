@@ -1,23 +1,28 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import SEO from "@/components/SEO";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const Index = () => {
+  const { t } = useTranslation();
+
   const featuredServices = [
     {
-      title: "GST Registration & Filing",
-      description: "Complete GST compliance and filing services",
+      title: t('services.gst.title'),
+      description: t('services.gst.description'),
       icon: "📋"
     },
     {
-      title: "Income Tax Returns", 
-      description: "Professional ITR filing for individuals and businesses",
+      title: t('services.itr.title'),
+      description: t('services.itr.description'),
       icon: "💼"
     },
     {
-      title: "Business Registration",
-      description: "Company registration and incorporation services",
+      title: t('services.business.title'),
+      description: t('services.business.description'),
       icon: "🏢"
     }
   ];
@@ -29,7 +34,7 @@ const Index = () => {
       rating: "⭐⭐⭐⭐⭐"
     },
     {
-      name: "Priya Sharma",
+      name: "Priya Sharma", 
       text: "Helped me with company registration. Smooth process throughout.",
       rating: "⭐⭐⭐⭐⭐"
     },
@@ -53,13 +58,15 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <nav className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">TaxConsult Pro</h1>
-            <div className="space-x-4">
-              <Link to="/" className="hover:text-primary">Home</Link>
-              <Link to="/services" className="hover:text-primary">Services</Link>
-              <Link to="/about" className="hover:text-primary">About</Link>
-              <Link to="/contact" className="hover:text-primary">Contact</Link>
-              <Link to="/blog" className="hover:text-primary">Blog</Link>
-              <Link to="/updates" className="hover:text-primary">Updates</Link>
+            <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
+              <Link to="/" className="hover:text-primary">{t('navigation.home')}</Link>
+              <Link to="/services" className="hover:text-primary">{t('navigation.services')}</Link>
+              <Link to="/about" className="hover:text-primary">{t('navigation.about')}</Link>
+              <Link to="/contact" className="hover:text-primary">{t('navigation.contact')}</Link>
+              <Link to="/blog" className="hover:text-primary">{t('navigation.blog')}</Link>
+              <Link to="/updates" className="hover:text-primary">{t('navigation.updates')}</Link>
+              <Link to="/dashboard" className="hover:text-primary bg-blue-100 px-3 py-1 rounded">Dashboard</Link>
             </div>
           </nav>
         </div>
@@ -68,17 +75,16 @@ const Index = () => {
       {/* Hero Section */}
       <section className="py-20 text-center">
         <div className="container mx-auto px-4">
-          <h2 className="text-5xl font-bold mb-4">Your Trusted Tax & Business Consultant</h2>
+          <h2 className="text-5xl font-bold mb-4">{t('hero.title')}</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Professional tax filing, GST compliance, and business registration services. 
-            Get expert guidance for all your financial needs.
+            {t('hero.subtitle')}
           </p>
           <div className="space-x-4">
             <Button size="lg" asChild>
-              <Link to="/contact">Book Now</Link>
+              <Link to="/contact">{t('hero.bookNow')}</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link to="/contact">Contact Us</Link>
+              <Link to="/contact">{t('hero.contactUs')}</Link>
             </Button>
           </div>
         </div>
@@ -87,7 +93,7 @@ const Index = () => {
       {/* Featured Services */}
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-center mb-12">Featured Services</h3>
+          <h3 className="text-3xl font-bold text-center mb-12">{t('services.title')}</h3>
           <div className="grid md:grid-cols-3 gap-8">
             {featuredServices.map((service, index) => (
               <Card key={index} className="text-center">
@@ -107,7 +113,7 @@ const Index = () => {
       {/* Testimonials */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-center mb-12">What Our Clients Say</h3>
+          <h3 className="text-3xl font-bold text-center mb-12">{t('testimonials.title')}</h3>
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <Card key={index}>
@@ -125,14 +131,14 @@ const Index = () => {
       {/* Call to Action */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl font-bold mb-4">Ready to Get Started?</h3>
-          <p className="text-xl mb-8">Contact us today for professional tax and business consulting services</p>
+          <h3 className="text-3xl font-bold mb-4">{t('cta.title')}</h3>
+          <p className="text-xl mb-8">{t('cta.subtitle')}</p>
           <div className="space-x-4">
             <Button size="lg" variant="secondary" asChild>
-              <Link to="/contact">Book Consultation</Link>
+              <Link to="/contact">{t('cta.bookConsultation')}</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link to="/contact">Contact Us</Link>
+              <Link to="/contact">{t('hero.contactUs')}</Link>
             </Button>
           </div>
         </div>
@@ -141,7 +147,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-muted py-8">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-muted-foreground">© 2024 TaxConsult Pro. All rights reserved.</p>
+          <p className="text-muted-foreground">{t('footer.copyright')}</p>
         </div>
       </footer>
     </div>
