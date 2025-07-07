@@ -20,6 +20,9 @@ import AdminBlog from "./pages/AdminBlog";
 import AdminMessages from "./pages/AdminMessages";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
+import ServiceForm from "./pages/ServiceForm";
+import BookAppointment from "./pages/BookAppointment";
+import UploadDocuments from "./pages/UploadDocuments";
 import AIChatbot from "./components/AIChatbot";
 
 const queryClient = new QueryClient();
