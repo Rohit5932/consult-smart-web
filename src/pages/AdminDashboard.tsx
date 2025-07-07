@@ -3,6 +3,9 @@ import { useUser, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/c
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import AdminAppointmentTracker from "@/components/AdminAppointmentTracker";
+import AdminDocumentTracker from "@/components/AdminDocumentTracker";
+import CountdownTimer from "@/components/CountdownTimer";
 
 const AdminDashboard = () => {
   const { user } = useUser();
@@ -42,7 +45,9 @@ const AdminDashboard = () => {
       <SignedIn>
         <div className="container mx-auto px-4 py-8">
           <h2 className="text-3xl font-bold mb-8">Admin Dashboard</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          {/* Quick Actions Panel */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>
                 <div className="text-3xl mb-2">🛠️</div>
@@ -94,6 +99,31 @@ const AdminDashboard = () => {
                 </Button>
               </CardContent>
             </Card>
+          </div>
+
+          {/* Countdown Timers */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <CountdownTimer 
+              title="GST Filing Deadline"
+              description="Next GST return filing deadline"
+              endDate="2024-02-20T23:59:59"
+            />
+            <CountdownTimer 
+              title="ITR Filing Season"
+              description="Income Tax Return filing deadline"
+              endDate="2024-07-31T23:59:59"
+            />
+            <CountdownTimer 
+              title="Special Offer"
+              description="Limited time discount on all services"
+              endDate="2024-01-31T23:59:59"
+            />
+          </div>
+
+          {/* Data Management */}
+          <div className="space-y-8">
+            <AdminAppointmentTracker />
+            <AdminDocumentTracker />
           </div>
         </div>
       </SignedIn>

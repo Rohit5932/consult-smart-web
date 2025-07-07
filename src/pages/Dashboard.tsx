@@ -4,9 +4,13 @@ import { useTranslation } from "react-i18next";
 import SEO from "@/components/SEO";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import GSTCalculator from "@/components/GSTCalculator";
+import SIPCalculator from "@/components/SIPCalculator";
+import EMICalculator from "@/components/EMICalculator";
 import ClientDashboard from "@/components/ClientDashboard";
 import ZoomIntegration from "@/components/ZoomIntegration";
 import CRMIntegration from "@/components/CRMIntegration";
+import AppointmentBooking from "@/components/AppointmentBooking";
+import DocumentUpload from "@/components/DocumentUpload";
 import AIChatbot from "@/components/AIChatbot";
 
 const Dashboard = () => {
@@ -38,11 +42,26 @@ const Dashboard = () => {
         <div className="grid gap-6 md:gap-8">
           {/* Tools Section */}
           <section>
-            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Tax Tools & Calculators</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Tax & Financial Calculators</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
               <div className="flex justify-center lg:justify-start">
                 <GSTCalculator />
               </div>
+              <div className="flex justify-center lg:justify-start">
+                <SIPCalculator />
+              </div>
+              <div className="flex justify-center lg:justify-start">
+                <EMICalculator />
+              </div>
+            </div>
+          </section>
+
+          {/* Client Services */}
+          <section>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Client Services</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+              <AppointmentBooking />
+              <DocumentUpload />
             </div>
           </section>
 
