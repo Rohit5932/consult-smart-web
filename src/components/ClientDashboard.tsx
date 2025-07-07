@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, FileText, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Appointment {
   id: string;
@@ -80,21 +81,21 @@ const ClientDashboard = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Appointments */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-0 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-lg md:text-xl text-blue-700">
               <Calendar className="h-4 w-4 md:h-5 md:w-5" />
               My Appointments
             </CardTitle>
-            <CardDescription className="text-sm">Your scheduled and past appointments</CardDescription>
+            <CardDescription className="text-sm text-blue-600">Your scheduled and past appointments</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
+          <CardContent className="p-6">
+            <div className="space-y-4">
               {appointments.map((appointment) => (
-                <div key={appointment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-3">
+                <div key={appointment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-xl gap-3 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center gap-3">
                     {getStatusIcon(appointment.status)}
                     <div>
@@ -108,25 +109,25 @@ const ClientDashboard = () => {
                 </div>
               ))}
             </div>
-            <Button className="w-full mt-4" variant="outline" size="sm">
-              Book New Appointment
+            <Button className="w-full mt-6 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700" asChild>
+              <Link to="/book-appointment">Book New Appointment</Link>
             </Button>
           </CardContent>
         </Card>
 
         {/* Documents */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-0 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-lg md:text-xl text-green-700">
               <FileText className="h-4 w-4 md:h-5 md:w-5" />
               My Documents
             </CardTitle>
-            <CardDescription className="text-sm">Track your document processing status</CardDescription>
+            <CardDescription className="text-sm text-green-600">Track your document processing status</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
+          <CardContent className="p-6">
+            <div className="space-y-4">
               {documents.map((document) => (
-                <div key={document.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg gap-3">
+                <div key={document.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-xl gap-3 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center gap-3">
                     {getStatusIcon(document.status)}
                     <div>
@@ -140,36 +141,60 @@ const ClientDashboard = () => {
                 </div>
               ))}
             </div>
-            <Button className="w-full mt-4" variant="outline" size="sm">
-              Upload Documents
+            <Button className="w-full mt-6 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700" asChild>
+              <Link to="/upload-documents">Upload Documents</Link>
             </Button>
           </CardContent>
         </Card>
       </div>
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg md:text-xl">Quick Actions</CardTitle>
-          <CardDescription className="text-sm">Frequently used services</CardDescription>
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-0 bg-white/80 backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 rounded-t-lg">
+          <CardTitle className="text-lg md:text-xl text-orange-700">Quick Actions</CardTitle>
+          <CardDescription className="text-sm text-orange-600">Frequently used services</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            <Button variant="outline" className="h-16 md:h-20 flex flex-col text-xs md:text-sm">
-              <FileText className="h-4 w-4 md:h-6 md:w-6 mb-1 md:mb-2" />
-              GST Filing
+        <CardContent className="p-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <Button 
+              variant="outline" 
+              className="h-20 md:h-24 flex flex-col text-xs md:text-sm rounded-xl border-2 hover:border-blue-300 hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
+              asChild
+            >
+              <Link to="/service-form/gst-filing">
+                <FileText className="h-5 w-5 md:h-6 md:w-6 mb-2 text-blue-600" />
+                GST Filing
+              </Link>
             </Button>
-            <Button variant="outline" className="h-16 md:h-20 flex flex-col text-xs md:text-sm">
-              <Calendar className="h-4 w-4 md:h-6 md:w-6 mb-1 md:mb-2" />
-              ITR Filing
+            <Button 
+              variant="outline" 
+              className="h-20 md:h-24 flex flex-col text-xs md:text-sm rounded-xl border-2 hover:border-green-300 hover:bg-green-50 transition-all duration-300 transform hover:scale-105"
+              asChild
+            >
+              <Link to="/service-form/itr-filing">
+                <Calendar className="h-5 w-5 md:h-6 md:w-6 mb-2 text-green-600" />
+                ITR Filing
+              </Link>
             </Button>
-            <Button variant="outline" className="h-16 md:h-20 flex flex-col text-xs md:text-sm">
-              <CheckCircle className="h-4 w-4 md:h-6 md:w-6 mb-1 md:mb-2" />
-              Tax Planning
+            <Button 
+              variant="outline" 
+              className="h-20 md:h-24 flex flex-col text-xs md:text-sm rounded-xl border-2 hover:border-purple-300 hover:bg-purple-50 transition-all duration-300 transform hover:scale-105"
+              asChild
+            >
+              <Link to="/service-form/tax-planning">
+                <CheckCircle className="h-5 w-5 md:h-6 md:w-6 mb-2 text-purple-600" />
+                Tax Planning
+              </Link>
             </Button>
-            <Button variant="outline" className="h-16 md:h-20 flex flex-col text-xs md:text-sm">
-              <AlertCircle className="h-4 w-4 md:h-6 md:w-6 mb-1 md:mb-2" />
-              Compliance
+            <Button 
+              variant="outline" 
+              className="h-20 md:h-24 flex flex-col text-xs md:text-sm rounded-xl border-2 hover:border-red-300 hover:bg-red-50 transition-all duration-300 transform hover:scale-105"
+              asChild
+            >
+              <Link to="/service-form/compliance">
+                <AlertCircle className="h-5 w-5 md:h-6 md:w-6 mb-2 text-red-600" />
+                Compliance
+              </Link>
             </Button>
           </div>
         </CardContent>

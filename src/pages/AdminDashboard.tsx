@@ -122,6 +122,7 @@ const AdminDashboard = () => {
 
           {/* Data Management */}
           <div className="space-y-8">
+            <AdminServiceTracker />
             <AdminAppointmentTracker />
             <AdminDocumentTracker />
           </div>
