@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,11 @@ interface Appointment {
   date: string;
   time: string;
   status: "scheduled" | "completed" | "cancelled";
+  name?: string;
+  email?: string;
+  phone?: string;
+  message?: string;
+  createdAt?: string;
 }
 
 interface Document {
@@ -20,42 +25,86 @@ interface Document {
   type: string;
   status: "pending" | "processing" | "completed";
   uploadDate: string;
+  fileName?: string;
+  fileSize?: string;
+  fileType?: string;
+  clientName?: string;
 }
 
 const ClientDashboard = () => {
-  const [appointments] = useState<Appointment[]>([
-    {
-      id: "1",
-      service: "GST Filing",
-      date: "2024-01-15",
-      time: "10:00 AM",
-      status: "completed"
-    },
-    {
-      id: "2",
-      service: "Income Tax Return",
-      date: "2024-01-20",
-      time: "2:00 PM",
-      status: "scheduled"
-    }
-  ]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
 
-  const [documents] = useState<Document[]>([
-    {
-      id: "1",
-      name: "Form 16.pdf",
-      type: "Income Tax",
-      status: "completed",
-      uploadDate: "2024-01-10"
-    },
-    {
-      id: "2",
-      name: "GST Returns.xlsx",
-      type: "GST",
-      status: "processing",
-      uploadDate: "2024-01-12"
-    }
-  ]);
+  useEffect(() => {
+    // Load appointments from localStorage
+    const loadAppointments = () => {
+      const stored = localStorage.getItem('appointments');
+      let appointmentData: Appointment[] = [];
+      
+      if (stored) {
+        appointmentData = JSON.parse(stored);
+      } else {
+        // Demo data
+        appointmentData = [
+          {
+            id: "1",
+            service: "GST Filing",
+            date: "2024-01-15",
+            time: "10:00 AM",
+            status: "completed"
+          },
+          {
+            id: "2",
+            service: "Income Tax Return",
+            date: "2024-01-20",
+            time: "2:00 PM",
+            status: "scheduled"
+          }
+        ];
+      }
+      setAppointments(appointmentData);
+    };
+
+    // Load documents from localStorage
+    const loadDocuments = () => {
+      const stored = localStorage.getItem('documents');
+      let documentData: Document[] = [];
+      
+      if (stored) {
+        documentData = JSON.parse(stored);
+      } else {
+        // Demo data
+        documentData = [
+          {
+            id: "1",
+            name: "Form 16.pdf",
+            type: "Income Tax",
+            status: "completed",
+            uploadDate: "2024-01-10"
+          },
+          {
+            id: "2",
+            name: "GST Returns.xlsx",
+            type: "GST",
+            status: "processing",
+            uploadDate: "2024-01-12"
+          }
+        ];
+      }
+      setDocuments(documentData);
+    };
+
+    loadAppointments();
+    loadDocuments();
+    
+    // Refresh every 5 seconds to show new submissions
+    const interval = setInterval(() => {
+      loadAppointments();
+      loadDocuments();
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -93,7 +142,7 @@ const ClientDashboard = () => {
             <CardDescription className="text-sm text-blue-600">Your scheduled and past appointments</CardDescription>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="space-y-4">
+            <div className="space-y-4 max-h-64 overflow-y-auto">
               {appointments.map((appointment) => (
                 <div key={appointment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-xl gap-3 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center gap-3">
@@ -103,6 +152,9 @@ const ClientDashboard = () => {
                       <div className="text-xs md:text-sm text-muted-foreground">
                         {appointment.date} at {appointment.time}
                       </div>
+                      {appointment.name && (
+                        <div className="text-xs text-gray-500">Client: {appointment.name}</div>
+                      )}
                     </div>
                   </div>
                   {getStatusBadge(appointment.status)}
@@ -125,16 +177,19 @@ const ClientDashboard = () => {
             <CardDescription className="text-sm text-green-600">Track your document processing status</CardDescription>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="space-y-4">
+            <div className="space-y-4 max-h-64 overflow-y-auto">
               {documents.map((document) => (
                 <div key={document.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-xl gap-3 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center gap-3">
                     {getStatusIcon(document.status)}
                     <div>
-                      <div className="font-medium text-sm md:text-base">{document.name}</div>
+                      <div className="font-medium text-sm md:text-base">{document.fileName || document.name}</div>
                       <div className="text-xs md:text-sm text-muted-foreground">
                         {document.type} • Uploaded {document.uploadDate}
                       </div>
+                      {document.clientName && (
+                        <div className="text-xs text-gray-500">Client: {document.clientName}</div>
+                      )}
                     </div>
                   </div>
                   {getStatusBadge(document.status)}

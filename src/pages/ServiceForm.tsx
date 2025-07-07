@@ -20,32 +20,48 @@ const ServiceForm = () => {
     phone: "",
     company: "",
     message: "",
-    urgency: "normal"
+    urgency: "normal",
+    // GST specific fields
+    gstNumber: "",
+    businessType: "",
+    monthlyTurnover: "",
+    quarterlyTurnover: "",
+    panNumber: "",
+    // ITR specific fields
+    employmentType: "",
+    annualIncome: "",
+    investments: "",
+    // Tax Planning specific fields
+    currentTaxLiability: "",
+    investmentGoals: "",
+    // Compliance specific fields
+    complianceType: "",
+    businessSize: ""
   });
 
   const serviceConfig = {
     "gst-filing": {
       title: "GST Filing Service",
       icon: FileText,
-      description: "Get professional help with your GST return filing",
+      description: "Professional GST return filing with complete documentation",
       color: "blue"
     },
     "itr-filing": {
       title: "ITR Filing Service", 
       icon: Calendar,
-      description: "Professional income tax return filing assistance",
+      description: "Complete income tax return filing assistance",
       color: "green"
     },
     "tax-planning": {
       title: "Tax Planning Service",
       icon: CheckCircle,
-      description: "Strategic tax planning to minimize your tax liability",
+      description: "Strategic tax planning to optimize your tax savings",
       color: "purple"
     },
     "compliance": {
       title: "Compliance Service",
       icon: AlertCircle,
-      description: "Ensure your business stays compliant with all regulations",
+      description: "Comprehensive business compliance management",
       color: "red"
     }
   };
@@ -56,7 +72,6 @@ const ServiceForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Save to localStorage (simulating backend)
     const existingRequests = JSON.parse(localStorage.getItem('serviceRequests') || '[]');
     const newRequest = {
       id: Date.now().toString(),
@@ -70,8 +85,8 @@ const ServiceForm = () => {
     localStorage.setItem('serviceRequests', JSON.stringify(existingRequests));
     
     toast({
-      title: "Request Submitted!",
-      description: "We'll contact you within 24 hours.",
+      title: "Request Submitted Successfully!",
+      description: "Our team will review your request and contact you within 24 hours.",
     });
     
     navigate('/dashboard');
@@ -82,6 +97,223 @@ const ServiceForm = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const renderServiceSpecificFields = () => {
+    switch (serviceType) {
+      case "gst-filing":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="gstNumber" className="text-sm font-medium">GST Number</Label>
+              <Input
+                id="gstNumber"
+                name="gstNumber"
+                type="text"
+                value={formData.gstNumber}
+                onChange={handleInputChange}
+                className="rounded-lg border-2 focus:border-blue-400"
+                placeholder="Enter your GST number (e.g., 22AAAAA0000A1Z5)"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="businessType" className="text-sm font-medium">Business Type</Label>
+                <select
+                  id="businessType"
+                  name="businessType"
+                  value={formData.businessType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                >
+                  <option value="">Select Business Type</option>
+                  <option value="manufacturer">Manufacturer</option>
+                  <option value="trader">Trader</option>
+                  <option value="service-provider">Service Provider</option>
+                  <option value="e-commerce">E-commerce</option>
+                  <option value="restaurant">Restaurant</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="panNumber" className="text-sm font-medium">PAN Number *</Label>
+                <Input
+                  id="panNumber"
+                  name="panNumber"
+                  type="text"
+                  required
+                  value={formData.panNumber}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter PAN number"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="monthlyTurnover" className="text-sm font-medium">Monthly Turnover (₹)</Label>
+                <Input
+                  id="monthlyTurnover"
+                  name="monthlyTurnover"
+                  type="number"
+                  value={formData.monthlyTurnover}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter monthly turnover"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="quarterlyTurnover" className="text-sm font-medium">Quarterly Turnover (₹)</Label>
+                <Input
+                  id="quarterlyTurnover"
+                  name="quarterlyTurnover"
+                  type="number"
+                  value={formData.quarterlyTurnover}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter quarterly turnover"
+                />
+              </div>
+            </div>
+          </>
+        );
+
+      case "itr-filing":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="employmentType" className="text-sm font-medium">Employment Type</Label>
+                <select
+                  id="employmentType"
+                  name="employmentType"
+                  value={formData.employmentType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                >
+                  <option value="">Select Employment Type</option>
+                  <option value="salaried">Salaried</option>
+                  <option value="business">Business Owner</option>
+                  <option value="freelancer">Freelancer</option>
+                  <option value="retired">Retired</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="annualIncome" className="text-sm font-medium">Annual Income (₹)</Label>
+                <Input
+                  id="annualIncome"
+                  name="annualIncome"
+                  type="number"
+                  value={formData.annualIncome}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter annual income"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="investments" className="text-sm font-medium">Investment Details</Label>
+              <Textarea
+                id="investments"
+                name="investments"
+                value={formData.investments}
+                onChange={handleInputChange}
+                rows={3}
+                className="rounded-lg border-2 focus:border-blue-400"
+                placeholder="Mention your investments (80C, 80D, etc.)"
+              />
+            </div>
+          </>
+        );
+
+      case "tax-planning":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="currentTaxLiability" className="text-sm font-medium">Current Tax Liability (₹)</Label>
+                <Input
+                  id="currentTaxLiability"
+                  name="currentTaxLiability"
+                  type="number"
+                  value={formData.currentTaxLiability}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter current tax liability"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="investmentGoals" className="text-sm font-medium">Investment Goals</Label>
+                <select
+                  id="investmentGoals"
+                  name="investmentGoals"
+                  value={formData.investmentGoals}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                >
+                  <option value="">Select Investment Goal</option>
+                  <option value="tax-saving">Tax Saving</option>
+                  <option value="retirement">Retirement Planning</option>
+                  <option value="child-education">Child Education</option>
+                  <option value="wealth-creation">Wealth Creation</option>
+                </select>
+              </div>
+            </div>
+          </>
+        );
+
+      case "compliance":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="complianceType" className="text-sm font-medium">Compliance Type</Label>
+                <select
+                  id="complianceType"
+                  name="complianceType"
+                  value={formData.complianceType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                >
+                  <option value="">Select Compliance Type</option>
+                  <option value="gst-compliance">GST Compliance</option>
+                  <option value="income-tax">Income Tax Compliance</option>
+                  <option value="company-law">Company Law</option>
+                  <option value="labour-law">Labour Law</option>
+                  <option value="fema">FEMA Compliance</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="businessSize" className="text-sm font-medium">Business Size</Label>
+                <select
+                  id="businessSize"
+                  name="businessSize"
+                  value={formData.businessSize}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                >
+                  <option value="">Select Business Size</option>
+                  <option value="startup">Startup (< 10 employees)</option>
+                  <option value="small">Small (10-50 employees)</option>
+                  <option value="medium">Medium (50-250 employees)</option>
+                  <option value="large">Large (250+ employees)</option>
+                </select>
+              </div>
+            </div>
+          </>
+        );
+
+      default:
+        return null;
+    }
   };
 
   if (!service) {
@@ -121,7 +353,7 @@ const ServiceForm = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
             <CardHeader className={`bg-gradient-to-r from-${service.color}-50 to-${service.color}-100 rounded-t-lg`}>
               <CardTitle className={`flex items-center gap-3 text-2xl text-${service.color}-700`}>
@@ -135,91 +367,107 @@ const ServiceForm = () => {
             
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-sm font-medium">Full Name *</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-2 focus:border-blue-400"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium">Email Address *</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-2 focus:border-blue-400"
-                      placeholder="Enter your email"
-                    />
+                {/* Basic Information */}
+                <div className="bg-gray-50 p-6 rounded-xl">
+                  <h3 className="text-lg font-semibold mb-4 text-gray-800">Basic Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-sm font-medium">Full Name *</Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className="rounded-lg border-2 focus:border-blue-400"
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-sm font-medium">Email Address *</Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="rounded-lg border-2 focus:border-blue-400"
+                        placeholder="Enter your email"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-sm font-medium">Phone Number *</Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        required
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="rounded-lg border-2 focus:border-blue-400"
+                        placeholder="Enter your phone number"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="company" className="text-sm font-medium">Company Name</Label>
+                      <Input
+                        id="company"
+                        name="company"
+                        type="text"
+                        value={formData.company}
+                        onChange={handleInputChange}
+                        className="rounded-lg border-2 focus:border-blue-400"
+                        placeholder="Enter company name (optional)"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-sm font-medium">Phone Number *</Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      required
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-2 focus:border-blue-400"
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="company" className="text-sm font-medium">Company Name</Label>
-                    <Input
-                      id="company"
-                      name="company"
-                      type="text"
-                      value={formData.company}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-2 focus:border-blue-400"
-                      placeholder="Enter company name (optional)"
-                    />
+                {/* Service Specific Fields */}
+                <div className="bg-blue-50 p-6 rounded-xl">
+                  <h3 className="text-lg font-semibold mb-4 text-blue-800">Service Details</h3>
+                  <div className="space-y-6">
+                    {renderServiceSpecificFields()}
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="urgency" className="text-sm font-medium">Urgency Level</Label>
-                  <select
-                    id="urgency"
-                    name="urgency"
-                    value={formData.urgency}
-                    onChange={handleInputChange}
-                    className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
-                  >
-                    <option value="normal">Normal (7-10 days)</option>
-                    <option value="urgent">Urgent (3-5 days)</option>
-                    <option value="immediate">Immediate (1-2 days)</option>
-                  </select>
-                </div>
+                {/* Additional Information */}
+                <div className="bg-green-50 p-6 rounded-xl">
+                  <h3 className="text-lg font-semibold mb-4 text-green-800">Additional Information</h3>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="urgency" className="text-sm font-medium">Urgency Level</Label>
+                      <select
+                        id="urgency"
+                        name="urgency"
+                        value={formData.urgency}
+                        onChange={handleInputChange}
+                        className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                      >
+                        <option value="normal">Normal (7-10 days)</option>
+                        <option value="urgent">Urgent (3-5 days)</option>
+                        <option value="immediate">Immediate (1-2 days)</option>
+                      </select>
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-sm font-medium">Additional Details</Label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="rounded-lg border-2 focus:border-blue-400"
-                    placeholder="Please provide any additional details about your requirements..."
-                  />
+                    <div className="space-y-2">
+                      <Label htmlFor="message" className="text-sm font-medium">Additional Details</Label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        rows={4}
+                        className="rounded-lg border-2 focus:border-blue-400"
+                        placeholder="Please provide any additional details about your requirements..."
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <Button 
