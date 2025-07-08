@@ -1,439 +1,391 @@
-
-import { useParams, Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import SEO from "@/components/SEO";
-import { ArrowLeft, CheckCircle, Users, Scale, Calendar, Phone } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, CheckCircle, Clock, FileText, Users, Phone, Mail, MapPin, Star } from "lucide-react";
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
-
-  const services = {
-    gst: {
-      title: "GST Registration & Filing",
-      icon: "📊",
-      color: "from-blue-500 to-blue-600",
-      description: "Complete GST compliance solution with registration, monthly returns, and expert guidance for businesses of all sizes.",
-      whatIs: "GST (Goods and Services Tax) is a comprehensive indirect tax levied on the supply of goods and services across India. It replaced multiple indirect taxes and created a unified tax structure.",
-      benefits: [
-        "Input tax credit benefits",
-        "Nationwide business expansion",
-        "Simplified tax structure",
-        "Reduced tax burden",
-        "Digital compliance system",
-        "Improved supply chain efficiency"
-      ],
-      laws: [
-        "Central Goods and Services Tax Act, 2017 (CGST Act)",
-        "State Goods and Services Tax Act, 2017 (SGST Act)", 
-        "Integrated Goods and Services Tax Act, 2017 (IGST Act)",
-        "GST Rules and Notifications by CBIC"
-      ],
-      whoNeeds: [
-        "Businesses with annual turnover above ₹20 lakhs (₹10 lakhs for special category states)",
-        "Inter-state suppliers regardless of turnover",
-        "E-commerce operators and aggregators",
-        "Casual taxable persons",
-        "Non-resident taxable persons"
+  const navigate = useNavigate();
+  
+  const serviceDetails = {
+    "gst-registration": {
+      title: "GST Registration",
+      description: "Complete GST registration process for new businesses with expert guidance and support",
+      price: "₹2,999",
+      originalPrice: "₹4,999",
+      duration: "7-10 days",
+      rating: 4.8,
+      reviews: 127,
+      color: "blue",
+      features: [
+        "Complete documentation assistance",
+        "Expert review and verification",
+        "GST number within 7-10 days",
+        "Compliance guidance included",
+        "1-year support included"
       ],
       process: [
         "Document collection and verification",
-        "Online GST registration application",
-        "Processing and approval",
-        "Regular return filing (GSTR-1, GSTR-3B)",
-        "Annual return filing",
-        "Ongoing compliance management"
+        "Online application submission",
+        "Track application status",
+        "Receive GST certificate",
+        "Setup compliance calendar"
+      ],
+      documents: [
+        "PAN Card of business/proprietor",
+        "Aadhaar Card of authorized signatory",
+        "Bank account statement/cancelled cheque",
+        "Business address proof",
+        "Photograph of authorized signatory",
+        "Digital signature (if required)"
+      ],
+      benefits: [
+        "Legal compliance with tax laws",
+        "Input tax credit benefits",
+        "Enhanced business credibility",
+        "Simplified tax filing process",
+        "Access to government schemes"
       ]
     },
-    itr: {
-      title: "Income Tax Returns",
-      icon: "💰",
-      color: "from-green-500 to-green-600",
-      description: "Professional ITR filing services for individuals, businesses, and startups with maximum refund optimization.",
-      whatIs: "Income Tax Return (ITR) is a mandatory annual filing that reports your income, deductions, and tax liability to the Income Tax Department of India.",
+    "gst-filing": {
+      title: "GST Filing",
+      description: "Monthly and quarterly GST return filing services with accuracy guarantee",
+      price: "₹999/month",
+      originalPrice: "₹1,499/month",
+      duration: "Same day",
+      rating: 4.9,
+      reviews: 203,
+      color: "green",
+      features: [
+        "Monthly GSTR-1, GSTR-3B filing",
+        "Quarterly GSTR-9 annual return",
+        "Real-time compliance monitoring",
+        "Expert tax consultation",
+        "Penalty protection guarantee"
+      ],
+      process: [
+        "Collect sales and purchase data",
+        "Reconcile input tax credit",
+        "Prepare and review returns",
+        "File returns before deadline",
+        "Provide compliance reports"
+      ],
+      documents: [
+        "Sales invoices and bills",
+        "Purchase invoices and bills",
+        "Bank statements",
+        "Previous GST returns",
+        "Input tax credit statements"
+      ],
       benefits: [
-        "Claim tax refunds",
-        "Proof of income for loans",
-        "Carry forward losses",
         "Avoid penalties and interest",
-        "Compliance with tax laws",
-        "Build financial credibility"
-      ],
-      laws: [
-        "Income Tax Act, 1961",
-        "Income Tax Rules, 1962",
-        "Finance Act (Annual amendments)",
-        "CBDT Circulars and Notifications"
-      ],
-      whoNeeds: [
-        "Individuals with income above ₹2.5 lakhs",
-        "Senior citizens with income above ₹3 lakhs",
-        "Super senior citizens with income above ₹5 lakhs",
-        "Anyone claiming tax refunds",
-        "Foreign asset holders",
-        "Directors and high net worth individuals"
-      ],
-      process: [
-        "Income and investment document collection",
-        "Tax computation and optimization",
-        "ITR form selection and preparation",
-        "Online filing and verification",
-        "Response to notices if any",
-        "Refund tracking and follow-up"
+        "Maximize input tax credit",
+        "Expert guidance on compliance",
+        "Monthly financial insights",
+        "Peace of mind guarantee"
       ]
     },
-    business: {
-      title: "Business Registration",
-      icon: "🏢",
-      color: "from-purple-500 to-purple-600",
-      description: "Complete business incorporation services including company registration, LLP formation, and partnership registration.",
-      whatIs: "Business registration is the legal process of incorporating your business entity, providing it with a separate legal identity and enabling it to operate within the regulatory framework.",
-      benefits: [
-        "Limited liability protection",
-        "Legal entity status",
-        "Access to funding and investments",
-        "Tax benefits and deductions",
-        "Enhanced credibility",
-        "Perpetual succession"
-      ],
-      laws: [
-        "Companies Act, 2013",
-        "Limited Liability Partnership Act, 2008",
-        "Indian Partnership Act, 1932",
-        "Foreign Exchange Management Act (FEMA)"
-      ],
-      whoNeeds: [
-        "Entrepreneurs starting new ventures",
-        "Existing partnerships wanting incorporation",
-        "Foreign investors entering India",
-        "Professionals forming LLPs",
-        "Startups seeking funding",
-        "Businesses expanding operations"
+    "itr-filing": {
+      title: "Income Tax Returns",
+      description: "ITR filing for individuals, HUF, and businesses with maximum refund optimization",
+      price: "₹1,499",
+      originalPrice: "₹2,499",
+      duration: "3-5 days",
+      rating: 4.7,
+      reviews: 89,
+      color: "purple",
+      features: [
+        "All ITR forms supported",
+        "Maximum refund optimization",
+        "Capital gains calculation",
+        "TDS reconciliation",
+        "Expert review included"
       ],
       process: [
-        "Business structure consultation",
-        "Name reservation and approval",
-        "Document preparation and filing",
-        "Incorporation certificate issuance",
-        "PAN and TAN registration",
-        "Bank account opening assistance"
-      ]
-    },
-    "tax-planning": {
-      title: "Tax Planning Services",
-      icon: "🎯",
-      color: "from-orange-500 to-orange-600",
-      description: "Strategic tax planning to minimize tax liability and maximize savings through legal optimization techniques.",
-      whatIs: "Tax planning is the strategic arrangement of financial affairs to minimize tax liability through legitimate deductions, exemptions, and investment planning.",
+        "Collect financial documents",
+        "Calculate tax liability",
+        "Optimize deductions and exemptions",
+        "Prepare and file ITR",
+        "Track refund status"
+      ],
+      documents: [
+        "Form 16/16A (if applicable)",
+        "Bank statements",
+        "Investment proofs (80C, 80D)",
+        "Property documents",
+        "Business P&L (if applicable)",
+        "Previous year ITR"
+      ],
       benefits: [
-        "Reduced tax liability",
-        "Improved cash flow",
-        "Investment optimization",
-        "Retirement planning benefits",
-        "Estate planning advantages",
-        "Long-term wealth creation"
-      ],
-      laws: [
-        "Income Tax Act, 1961 - Chapter VI-A",
-        "Securities Transaction Tax provisions",
-        "Capital Gains Tax regulations",
-        "International Tax provisions"
-      ],
-      whoNeeds: [
-        "High-income individuals",
-        "Business owners and entrepreneurs",
-        "Senior management professionals",
-        "NRIs with Indian income",
-        "Investors and traders",
-        "Retirees and pensioners"
-      ],
-      process: [
-        "Financial situation analysis",
-        "Tax liability assessment",
-        "Investment strategy formulation",
-        "Implementation of tax-saving instruments",
-        "Regular monitoring and review",
-        "Year-end optimization"
-      ]
-    },
-    audit: {
-      title: "Audit Services",
-      icon: "🔍",
-      color: "from-red-500 to-red-600",
-      description: "Comprehensive audit services including statutory audits, internal audits, and compliance management for businesses.",
-      whatIs: "Audit services involve systematic examination of financial records, transactions, and compliance procedures to ensure accuracy, transparency, and adherence to regulations.",
-      benefits: [
-        "Enhanced financial transparency",
-        "Risk mitigation",
-        "Regulatory compliance",
-        "Improved internal controls",
-        "Stakeholder confidence",
-        "Operational efficiency"
-      ],
-      laws: [
-        "Companies Act, 2013 - Audit provisions",
-        "Income Tax Act, 1961 - Tax Audit",
-        "GST Act - GST Audit provisions",
-        "Banking Regulation Act for NBFCs"
-      ],
-      whoNeeds: [
-        "Companies above specified thresholds",
-        "Businesses with turnover above ₹1 crore",
-        "Listed companies",
-        "Financial institutions",
-        "Non-profit organizations",
-        "Government contractors"
-      ],
-      process: [
-        "Audit planning and risk assessment",
-        "Document and record examination",
-        "Testing of internal controls",
-        "Financial statement verification",
-        "Audit report preparation",
-        "Management consultation"
-      ]
-    },
-    accounting: {
-      title: "Accounting Services",
-      icon: "📚",
-      color: "from-teal-500 to-teal-600",
-      description: "Complete accounting solutions including bookkeeping, financial statements, and accounting management for businesses.",
-      whatIs: "Accounting services encompass systematic recording, measuring, and communication of financial information to help businesses make informed decisions.",
-      benefits: [
-        "Accurate financial records",
-        "Better decision making",
-        "Tax compliance readiness",
-        "Improved cash flow management",
-        "Financial planning support",
-        "Reduced operational costs"
-      ],
-      laws: [
-        "Accounting Standards (AS/Ind AS)",
-        "Companies Act, 2013 - Accounting provisions",
-        "Income Tax Act - Maintenance of books",
-        "GST Act - Record maintenance"
-      ],
-      whoNeeds: [
-        "Small and medium businesses",
-        "Startups and new ventures",
-        "Professional service firms",
-        "Trading and manufacturing units",
-        "Non-profit organizations",
-        "Individual professionals"
-      ],
-      process: [
-        "Chart of accounts setup",
-        "Daily transaction recording",
-        "Monthly reconciliation",
-        "Financial statement preparation",
-        "Tax provision calculation",
-        "Management reporting"
+        "Maximum tax savings",
+        "Quick refund processing",
+        "Expert tax planning advice",
+        "Compliance assurance",
+        "Future planning guidance"
       ]
     }
   };
 
-  const service = services[serviceId as keyof typeof services];
+  const service = serviceDetails[serviceId as keyof typeof serviceDetails];
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Service Not Found</h2>
-          <Link to="/services">
-            <Button>Back to Services</Button>
-          </Link>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
+        <Card className="max-w-md">
+          <CardContent className="p-8 text-center">
+            <h2 className="text-xl font-bold text-red-600 mb-2">Service Not Found</h2>
+            <p className="text-gray-600 mb-4">The requested service could not be found.</p>
+            <Button onClick={() => navigate('/services')}>Back to Services</Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <SEO 
-        title={`${service.title} - TaxConsult Pro`}
-        description={service.description}
-        keywords={`${service.title.toLowerCase()}, tax consultant, professional services`}
-      />
-      
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b sticky top-0 z-50">
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 w-8 h-8 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">T</span>
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                TaxConsult Pro
-              </span>
-            </Link>
-            <Link to="/">
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Home
-              </Button>
-            </Link>
-          </nav>
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/services')}
+              className="rounded-full"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Services
+            </Button>
+          </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="text-6xl mb-6">{service.icon}</div>
-            <h1 className={`text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
-              {service.title}
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
-              {service.description}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className={`bg-gradient-to-r ${service.color} text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`} asChild>
-                <Link to="/contact">Get This Service</Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-2 px-8 py-4 rounded-full font-semibold" asChild>
-                <Link to="/contact">
-                  <Phone className="mr-2 h-5 w-5" />
-                  Book Consultation
-                </Link>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Hero Section */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-12">
+            <div>
+              <Badge className={`bg-${service.color}-100 text-${service.color}-700 mb-4`}>
+                Professional Service
+              </Badge>
+              <h1 className="text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
+                {service.title}
+              </h1>
+              <p className="text-xl text-gray-600 mb-6 leading-relaxed">
+                {service.description}
+              </p>
+              
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                  <span className="ml-2 font-semibold">{service.rating}</span>
+                  <span className="text-gray-500">({service.reviews} reviews)</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-6 mb-8">
+                <div>
+                  <div className="text-3xl font-bold text-gray-900">{service.price}</div>
+                  <div className="text-lg text-gray-500 line-through">{service.originalPrice}</div>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Clock className="h-5 w-5" />
+                  <span>{service.duration}</span>
+                </div>
+              </div>
+
+              <Button 
+                size="lg" 
+                className={`bg-gradient-to-r from-${service.color}-600 to-${service.color}-700 hover:from-${service.color}-700 hover:to-${service.color}-800 text-white px-8 py-6 text-lg rounded-full shadow-lg transform hover:scale-105 transition-all duration-300`}
+                onClick={() => navigate(`/service-form/${serviceId}`)}
+              >
+                Get Started Now
               </Button>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Service Details */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* What is this service */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <div className={`bg-gradient-to-r ${service.color} w-8 h-8 rounded-lg flex items-center justify-center`}>
-                    <CheckCircle className="h-5 w-5 text-white" />
-                  </div>
-                  What is {service.title}?
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 leading-relaxed text-lg">{service.whatIs}</p>
-              </CardContent>
-            </Card>
-
-            {/* Key Benefits */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <div className={`bg-gradient-to-r ${service.color} w-8 h-8 rounded-lg flex items-center justify-center`}>
-                    <CheckCircle className="h-5 w-5 text-white" />
-                  </div>
-                  Key Benefits
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {service.benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700">{benefit}</span>
-                    </div>
+            <Card className="bg-white/90 backdrop-blur-sm shadow-xl border-0">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-6">What's Included:</h3>
+                <ul className="space-y-4">
+                  {service.features.map((feature, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <CheckCircle className={`h-5 w-5 text-${service.color}-600 mt-0.5 flex-shrink-0`} />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
                   ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Legal Framework */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <div className={`bg-gradient-to-r ${service.color} w-8 h-8 rounded-lg flex items-center justify-center`}>
-                    <Scale className="h-5 w-5 text-white" />
-                  </div>
-                  Legal Framework & Regulations
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {service.laws.map((law, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <Badge variant="outline" className="mt-1 text-xs">⚖️</Badge>
-                      <span className="text-gray-700">{law}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Who Needs This */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <div className={`bg-gradient-to-r ${service.color} w-8 h-8 rounded-lg flex items-center justify-center`}>
-                    <Users className="h-5 w-5 text-white" />
-                  </div>
-                  Who Needs This Service?
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {service.whoNeeds.map((need, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <Users className="h-5 w-5 text-blue-500 flex-shrink-0 mt-1" />
-                      <span className="text-gray-700">{need}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Process */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <div className={`bg-gradient-to-r ${service.color} w-8 h-8 rounded-lg flex items-center justify-center`}>
-                    <Calendar className="h-5 w-5 text-white" />
-                  </div>
-                  Our Process
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {service.process.map((step, index) => (
-                    <div key={index} className="flex items-start gap-4">
-                      <div className={`bg-gradient-to-r ${service.color} w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
-                        {index + 1}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-gray-700 font-medium">{step}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* CTA */}
-            <Card className={`border-0 bg-gradient-to-r ${service.color} text-white`}>
-              <CardContent className="text-center py-12">
-                <h3 className="text-2xl md:text-3xl font-bold mb-4">Ready to Get Started?</h3>
-                <p className="text-lg mb-8 opacity-90">Let our experts handle your {service.title.toLowerCase()} needs</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" variant="secondary" className="bg-white text-gray-800 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold" asChild>
-                    <Link to="/contact">Book Free Consultation</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-gray-800 px-8 py-4 rounded-full font-semibold" asChild>
-                    <Link to="/contact">Call: +91-9038603090</Link>
-                  </Button>
-                </div>
+                </ul>
               </CardContent>
             </Card>
           </div>
+
+          {/* Detailed Information Tabs */}
+          <Tabs defaultValue="process" className="w-full">
+            <TabsList className="grid w-full grid-cols-4 mb-8">
+              <TabsTrigger value="process">Process</TabsTrigger>
+              <TabsTrigger value="documents">Documents</TabsTrigger>
+              <TabsTrigger value="benefits">Benefits</TabsTrigger>
+              <TabsTrigger value="support">Support</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="process" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-6 w-6" />
+                    Our Process
+                  </CardTitle>
+                  <CardDescription>
+                    Step-by-step process we follow to deliver your service
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {service.process.map((step, index) => (
+                      <div key={index} className="flex items-start gap-4">
+                        <div className={`w-8 h-8 rounded-full bg-${service.color}-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0`}>
+                          {index + 1}
+                        </div>
+                        <div>
+                          <p className="text-gray-800 font-medium">{step}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="documents" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Required Documents</CardTitle>
+                  <CardDescription>
+                    Documents you need to provide for this service
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {service.documents.map((document, index) => (
+                      <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                        <FileText className={`h-5 w-5 text-${service.color}-600`} />
+                        <span className="text-gray-700">{document}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="benefits" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Key Benefits</CardTitle>
+                  <CardDescription>
+                    Why choose this service for your business
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {service.benefits.map((benefit, index) => (
+                      <div key={index} className="flex items-start gap-3">
+                        <CheckCircle className={`h-6 w-6 text-${service.color}-600 mt-1`} />
+                        <div>
+                          <p className="text-gray-800 font-medium">{benefit}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="support" className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Users className="h-6 w-6" />
+                      Expert Support
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium">Phone Support</p>
+                        <p className="text-gray-600">+91 98765 43210</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium">Email Support</p>
+                        <p className="text-gray-600">support@taxconsultpro.com</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <MapPin className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium">Office Address</p>
+                        <p className="text-gray-600">123 Business District, Mumbai</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Guarantee</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600 mt-1" />
+                        <p className="text-gray-700">100% Accuracy Guarantee</p>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600 mt-1" />
+                        <p className="text-gray-700">Timely Delivery Promise</p>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600 mt-1" />
+                        <p className="text-gray-700">Expert Consultation Included</p>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600 mt-1" />
+                        <p className="text-gray-700">Post-Service Support</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          {/* CTA Section */}
+          <Card className={`mt-12 bg-gradient-to-r from-${service.color}-600 to-${service.color}-700 text-white border-0`}>
+            <CardContent className="p-8 text-center">
+              <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
+              <p className="text-lg mb-6 opacity-90">
+                Join thousands of satisfied customers who trust us with their {service.title.toLowerCase()}
+              </p>
+              <Button 
+                size="lg" 
+                variant="secondary"
+                className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-6 text-lg rounded-full font-semibold"
+                onClick={() => navigate(`/service-form/${serviceId}`)}
+              >
+                Start Your Application
+              </Button>
+            </CardContent>
+          </Card>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
