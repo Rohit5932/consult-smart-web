@@ -72,10 +72,32 @@ const AdminServiceTracker = () => {
   };
 
   const serviceTypeNames: Record<string, string> = {
+    "gst-registration": "GST Registration",
     "gst-filing": "GST Filing",
     "itr-filing": "ITR Filing",
+    "company-registration": "Company Registration",
+    "business-license": "Business License",
+    "accounting-services": "Accounting Services",
     "tax-planning": "Tax Planning",
-    "compliance": "Compliance"
+    "audit-services": "Audit Services",
+    "compliance": "TDS Compliance"
+  };
+
+  const getDeadline = (request: ServiceRequest) => {
+    const createdDate = new Date(request.createdAt);
+    const urgencyDays = {
+      'immediate': 2,
+      'urgent': 5,
+      'normal': 10
+    };
+    const days = urgencyDays[request.urgency as keyof typeof urgencyDays] || 10;
+    createdDate.setDate(createdDate.getDate() + days);
+    return createdDate;
+  };
+
+  const isOverdue = (request: ServiceRequest) => {
+    if (request.status === 'completed') return false;
+    return new Date() > getDeadline(request);
   };
 
   return (

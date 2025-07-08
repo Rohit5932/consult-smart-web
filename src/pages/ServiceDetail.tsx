@@ -126,6 +126,234 @@ const ServiceDetail = () => {
         "Compliance assurance",
         "Future planning guidance"
       ]
+    },
+    "company-registration": {
+      title: "Company Registration",
+      description: "Private Limited, LLP, and Partnership firm registration with complete legal compliance",
+      price: "₹8,999",
+      originalPrice: "₹12,999",
+      duration: "15-20 days",
+      rating: 4.6,
+      reviews: 156,
+      color: "orange",
+      features: [
+        "Complete company incorporation",
+        "DIN and DSC for directors",
+        "MOA and AOA preparation",
+        "Certificate of incorporation",
+        "PAN and TAN registration"
+      ],
+      process: [
+        "Name approval and reservation",
+        "Document preparation and verification",
+        "Online incorporation filing",
+        "Certificate generation",
+        "Post-incorporation compliance setup"
+      ],
+      documents: [
+        "Director's PAN and Aadhaar",
+        "Address proof of registered office",
+        "NOC from property owner",
+        "Director's photographs",
+        "Mobile and email details"
+      ],
+      benefits: [
+        "Limited liability protection",
+        "Separate legal entity status",
+        "Easy access to funding",
+        "Enhanced business credibility",
+        "Tax benefits and exemptions"
+      ]
+    },
+    "business-license": {
+      title: "Business License",
+      description: "Trade license and other business permits for legal business operations",
+      price: "₹2,499",
+      originalPrice: "₹3,999",
+      duration: "10-15 days",
+      rating: 4.5,
+      reviews: 98,
+      color: "red",
+      features: [
+        "Trade license application",
+        "Municipal approvals",
+        "Fire safety clearance",
+        "Pollution control board NOC",
+        "Industry-specific licenses"
+      ],
+      process: [
+        "License requirement analysis",
+        "Document compilation",
+        "Application submission",
+        "Authority inspection coordination",
+        "License certificate delivery"
+      ],
+      documents: [
+        "Business registration certificate",
+        "Property ownership/rental agreement",
+        "Identity and address proof",
+        "NOC from landlord",
+        "Fire safety arrangements proof"
+      ],
+      benefits: [
+        "Legal business operations",
+        "Government tender eligibility",
+        "Bank account opening ease",
+        "Customer trust building",
+        "Regulatory compliance"
+      ]
+    },
+    "accounting-services": {
+      title: "Accounting Services",
+      description: "Professional bookkeeping and financial statement preparation services",
+      price: "₹4,999/month",
+      originalPrice: "₹6,999/month",
+      duration: "Monthly",
+      rating: 4.8,
+      reviews: 234,
+      color: "cyan",
+      features: [
+        "Daily bookkeeping entries",
+        "Monthly financial statements",
+        "Bank reconciliation",
+        "Expense tracking and analysis",
+        "Tax-ready financial reports"
+      ],
+      process: [
+        "Initial books setup and review",
+        "Daily transaction recording",
+        "Monthly reconciliation",
+        "Financial statements preparation",
+        "Management reporting and insights"
+      ],
+      documents: [
+        "Bank statements",
+        "Sales and purchase invoices",
+        "Expense receipts and bills",
+        "Previous financial records",
+        "Chart of accounts setup"
+      ],
+      benefits: [
+        "Accurate financial tracking",
+        "Tax compliance readiness",
+        "Business performance insights",
+        "Time and cost savings",
+        "Professional financial management"
+      ]
+    },
+    "tax-planning": {
+      title: "Tax Planning",
+      description: "Strategic tax planning to minimize tax liability and maximize savings",
+      price: "₹5,999",
+      originalPrice: "₹8,999",
+      duration: "5-7 days",
+      rating: 4.7,
+      reviews: 167,
+      color: "indigo",
+      features: [
+        "Comprehensive tax analysis",
+        "Investment planning advice",
+        "Deduction optimization",
+        "Future tax liability projection",
+        "Personalized tax strategy"
+      ],
+      process: [
+        "Financial position assessment",
+        "Tax liability calculation",
+        "Strategy development",
+        "Implementation roadmap",
+        "Ongoing monitoring and updates"
+      ],
+      documents: [
+        "Previous year's ITR",
+        "Investment statements",
+        "Salary slips and Form 16",
+        "Property documents",
+        "Insurance policy details"
+      ],
+      benefits: [
+        "Significant tax savings",
+        "Optimized investment portfolio",
+        "Future financial security",
+        "Legal compliance assurance",
+        "Expert financial guidance"
+      ]
+    },
+    "audit-services": {
+      title: "Audit Services",
+      description: "Comprehensive statutory and internal audit services for businesses",
+      price: "₹15,999",
+      originalPrice: "₹22,999",
+      duration: "20-30 days",
+      rating: 4.6,
+      reviews: 89,
+      color: "pink",
+      features: [
+        "Statutory audit compliance",
+        "Internal audit procedures",
+        "Risk assessment and management",
+        "Audit report preparation",
+        "Management letter and recommendations"
+      ],
+      process: [
+        "Audit planning and scope definition",
+        "Internal control evaluation",
+        "Detailed audit procedures",
+        "Findings documentation",
+        "Audit report finalization"
+      ],
+      documents: [
+        "Financial statements",
+        "Books of accounts",
+        "Bank statements and reconciliations",
+        "Supporting vouchers",
+        "Previous audit reports"
+      ],
+      benefits: [
+        "Regulatory compliance",
+        "Risk identification and mitigation",
+        "Improved internal controls",
+        "Stakeholder confidence",
+        "Business process optimization"
+      ]
+    },
+    "compliance": {
+      title: "TDS Compliance",
+      description: "Complete TDS filing and compliance management services",
+      price: "₹1,999/quarter",
+      originalPrice: "₹2,999/quarter",
+      duration: "Quarterly",
+      rating: 4.8,
+      reviews: 145,
+      color: "yellow",
+      features: [
+        "TDS calculation and deduction",
+        "Quarterly TDS return filing",
+        "TDS certificate generation",
+        "Penalty avoidance guidance",
+        "Compliance calendar management"
+      ],
+      process: [
+        "TDS liability assessment",
+        "Monthly TDS calculations",
+        "Quarterly return preparation",
+        "Online filing and payment",
+        "Certificate issuance to deductees"
+      ],
+      documents: [
+        "Salary register",
+        "Vendor payment details",
+        "Professional fee payments",
+        "Bank statements",
+        "Previous TDS returns"
+      ],
+      benefits: [
+        "Avoid TDS penalties",
+        "Timely compliance",
+        "Accurate TDS calculations",
+        "Certificate management",
+        "Regulatory peace of mind"
+      ]
     }
   };
 

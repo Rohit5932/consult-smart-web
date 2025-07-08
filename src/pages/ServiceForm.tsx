@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, FileText, Calendar, CheckCircle, AlertCircle } from "lucide-react";
+import { ArrowLeft, FileText, Calendar, CheckCircle, AlertCircle, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const ServiceForm = () => {
@@ -36,33 +36,78 @@ const ServiceForm = () => {
     investmentGoals: "",
     // Compliance specific fields
     complianceType: "",
-    businessSize: ""
+    businessSize: "",
+    // Company Registration fields
+    companyName: "",
+    directorCount: "",
+    authorizedCapital: "",
+    // Business License fields
+    licenseType: "",
+    businessAddress: "",
+    // Accounting Services fields
+    accountingType: "",
+    transactionVolume: "",
+    // Audit Services fields
+    auditType: "",
+    companySize: ""
   });
 
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
   const serviceConfig = {
+    "gst-registration": {
+      title: "GST Registration Service",
+      icon: FileText,
+      description: "Complete GST registration process for new businesses",
+      color: "blue"
+    },
     "gst-filing": {
       title: "GST Filing Service",
       icon: FileText,
       description: "Professional GST return filing with complete documentation",
-      color: "blue"
+      color: "green"
     },
     "itr-filing": {
       title: "ITR Filing Service", 
       icon: Calendar,
       description: "Complete income tax return filing assistance",
-      color: "green"
+      color: "purple"
+    },
+    "company-registration": {
+      title: "Company Registration Service",
+      icon: CheckCircle,
+      description: "Private Limited, LLP, and Partnership firm registration",
+      color: "orange"
+    },
+    "business-license": {
+      title: "Business License Service",
+      icon: AlertCircle,
+      description: "Trade license and other business permits",
+      color: "red"
+    },
+    "accounting-services": {
+      title: "Accounting Services",
+      icon: FileText,
+      description: "Professional bookkeeping and financial statement preparation",
+      color: "cyan"
     },
     "tax-planning": {
       title: "Tax Planning Service",
       icon: CheckCircle,
       description: "Strategic tax planning to optimize your tax savings",
-      color: "purple"
+      color: "indigo"
+    },
+    "audit-services": {
+      title: "Audit Services",
+      icon: AlertCircle,
+      description: "Comprehensive statutory and internal audit services",
+      color: "pink"
     },
     "compliance": {
-      title: "Compliance Service",
+      title: "TDS Compliance Service",
       icon: AlertCircle,
-      description: "Comprehensive business compliance management",
-      color: "red"
+      description: "Complete TDS filing and compliance management",
+      color: "yellow"
     }
   };
 
@@ -89,7 +134,7 @@ const ServiceForm = () => {
       description: "Our team will review your request and contact you within 24 hours.",
     });
     
-    navigate('/dashboard');
+    navigate('/payment', { state: { serviceType, formData, uploadedFiles } });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -99,8 +144,71 @@ const ServiceForm = () => {
     });
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setUploadedFiles(prev => [...prev, ...files]);
+  };
+
+  const removeFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
   const renderServiceSpecificFields = () => {
     switch (serviceType) {
+      case "gst-registration":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="businessType" className="text-sm font-medium">Business Type *</Label>
+                <select
+                  id="businessType"
+                  name="businessType"
+                  value={formData.businessType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Business Type</option>
+                  <option value="sole-proprietorship">Sole Proprietorship</option>
+                  <option value="partnership">Partnership</option>
+                  <option value="private-limited">Private Limited</option>
+                  <option value="public-limited">Public Limited</option>
+                  <option value="llp">LLP</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="panNumber" className="text-sm font-medium">PAN Number *</Label>
+                <Input
+                  id="panNumber"
+                  name="panNumber"
+                  type="text"
+                  required
+                  value={formData.panNumber}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter PAN number"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="businessAddress" className="text-sm font-medium">Business Address *</Label>
+              <Textarea
+                id="businessAddress"
+                name="businessAddress"
+                value={formData.businessAddress}
+                onChange={handleInputChange}
+                rows={3}
+                className="rounded-lg border-2 focus:border-blue-400"
+                placeholder="Enter complete business address"
+                required
+              />
+            </div>
+          </>
+        );
+
       case "gst-filing":
         return (
           <>
@@ -269,6 +377,201 @@ const ServiceForm = () => {
           </>
         );
 
+      case "company-registration":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="companyName" className="text-sm font-medium">Proposed Company Name *</Label>
+                <Input
+                  id="companyName"
+                  name="companyName"
+                  type="text"
+                  required
+                  value={formData.companyName}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter proposed company name"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="directorCount" className="text-sm font-medium">Number of Directors *</Label>
+                <select
+                  id="directorCount"
+                  name="directorCount"
+                  value={formData.directorCount}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Director Count</option>
+                  <option value="2">2 Directors</option>
+                  <option value="3">3 Directors</option>
+                  <option value="4">4 Directors</option>
+                  <option value="5+">5+ Directors</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="authorizedCapital" className="text-sm font-medium">Authorized Capital (₹) *</Label>
+              <Input
+                id="authorizedCapital"
+                name="authorizedCapital"
+                type="number"
+                required
+                value={formData.authorizedCapital}
+                onChange={handleInputChange}
+                className="rounded-lg border-2 focus:border-blue-400"
+                placeholder="Enter authorized capital amount"
+              />
+            </div>
+          </>
+        );
+
+      case "business-license":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="licenseType" className="text-sm font-medium">License Type *</Label>
+                <select
+                  id="licenseType"
+                  name="licenseType"
+                  value={formData.licenseType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select License Type</option>
+                  <option value="trade-license">Trade License</option>
+                  <option value="shop-establishment">Shop & Establishment</option>
+                  <option value="fssai">FSSAI License</option>
+                  <option value="pollution-control">Pollution Control</option>
+                  <option value="fire-safety">Fire Safety</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="businessType" className="text-sm font-medium">Business Type *</Label>
+                <select
+                  id="businessType"
+                  name="businessType"
+                  value={formData.businessType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Business Type</option>
+                  <option value="retail">Retail</option>
+                  <option value="manufacturing">Manufacturing</option>
+                  <option value="service">Service</option>
+                  <option value="restaurant">Restaurant</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="businessAddress" className="text-sm font-medium">Business Address *</Label>
+              <Textarea
+                id="businessAddress"
+                name="businessAddress"
+                value={formData.businessAddress}
+                onChange={handleInputChange}
+                rows={3}
+                className="rounded-lg border-2 focus:border-blue-400"
+                placeholder="Enter complete business address"
+                required
+              />
+            </div>
+          </>
+        );
+
+      case "accounting-services":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="accountingType" className="text-sm font-medium">Service Type *</Label>
+                <select
+                  id="accountingType"
+                  name="accountingType"
+                  value={formData.accountingType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Service Type</option>
+                  <option value="bookkeeping">Bookkeeping</option>
+                  <option value="financial-statements">Financial Statements</option>
+                  <option value="payroll">Payroll Management</option>
+                  <option value="full-service">Complete Accounting</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="transactionVolume" className="text-sm font-medium">Monthly Transaction Volume</Label>
+                <select
+                  id="transactionVolume"
+                  name="transactionVolume"
+                  value={formData.transactionVolume}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                >
+                  <option value="">Select Transaction Volume</option>
+                  <option value="low">Low (1-50 transactions)</option>
+                  <option value="medium">Medium (51-200 transactions)</option>
+                  <option value="high">High (200+ transactions)</option>
+                </select>
+              </div>
+            </div>
+          </>
+        );
+
+      case "audit-services":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="auditType" className="text-sm font-medium">Audit Type *</Label>
+                <select
+                  id="auditType"
+                  name="auditType"
+                  value={formData.auditType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Audit Type</option>
+                  <option value="statutory">Statutory Audit</option>
+                  <option value="internal">Internal Audit</option>
+                  <option value="tax">Tax Audit</option>
+                  <option value="stock">Stock Audit</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="companySize" className="text-sm font-medium">Company Size *</Label>
+                <select
+                  id="companySize"
+                  name="companySize"
+                  value={formData.companySize}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Company Size</option>
+                  <option value="small">Small (Turnover &lt; 2 Cr)</option>
+                  <option value="medium">Medium (2-20 Cr)</option>
+                  <option value="large">Large (20+ Cr)</option>
+                </select>
+              </div>
+            </div>
+          </>
+        );
+
       case "compliance":
         return (
           <>
@@ -283,9 +586,8 @@ const ServiceForm = () => {
                   className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
                 >
                   <option value="">Select Compliance Type</option>
-                  <option value="gst-compliance">GST Compliance</option>
-                  <option value="income-tax">Income Tax Compliance</option>
-                  <option value="company-law">Company Law</option>
+                  <option value="tds">TDS Compliance</option>
+                  <option value="pf-esi">PF & ESI</option>
                   <option value="labour-law">Labour Law</option>
                   <option value="fema">FEMA Compliance</option>
                 </select>
@@ -433,6 +735,54 @@ const ServiceForm = () => {
                   <h3 className="text-lg font-semibold mb-4 text-blue-800">Service Details</h3>
                   <div className="space-y-6">
                     {renderServiceSpecificFields()}
+                  </div>
+                </div>
+
+                {/* Document Upload */}
+                <div className="bg-orange-50 p-6 rounded-xl">
+                  <h3 className="text-lg font-semibold mb-4 text-orange-800">Document Upload</h3>
+                  <div className="space-y-4">
+                    <p className="text-sm text-orange-700">
+                      Please upload the required documents for your service. Accepted formats: PDF, JPG, PNG, DOC, DOCX (Max 5MB each)
+                    </p>
+                    
+                    <div className="border-2 border-dashed border-orange-300 rounded-lg p-6 text-center">
+                      <Upload className="h-12 w-12 text-orange-400 mx-auto mb-4" />
+                      <Label htmlFor="fileUpload" className="cursor-pointer">
+                        <span className="text-orange-600 font-medium hover:text-orange-800">
+                          Click to upload files
+                        </span>
+                        <span className="text-gray-500"> or drag and drop</span>
+                      </Label>
+                      <Input
+                        id="fileUpload"
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+                    </div>
+
+                    {uploadedFiles.length > 0 && (
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-orange-800">Uploaded Files:</h4>
+                        {uploadedFiles.map((file, index) => (
+                          <div key={index} className="flex items-center justify-between bg-white p-3 rounded-lg border">
+                            <span className="text-sm text-gray-700">{file.name}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeFile(index)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 

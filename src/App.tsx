@@ -21,6 +21,7 @@ import AdminMessages from "./pages/AdminMessages";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import ServiceForm from "./pages/ServiceForm";
+import Payment from "./pages/Payment";
 import BookAppointment from "./pages/BookAppointment";
 import UploadDocuments from "./pages/UploadDocuments";
 import AIChatbot from "./components/AIChatbot";
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/updates" element={<Updates />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/service-form/:serviceType" element={<ServiceForm />} />
+            <Route path="/payment" element={<Payment />} />
             <Route path="/book-appointment" element={<BookAppointment />} />
             <Route path="/upload-documents" element={<UploadDocuments />} />
             <Route path="/admin" element={<AdminDashboard />} />
