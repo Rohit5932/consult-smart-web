@@ -301,7 +301,7 @@ const ServiceForm = () => {
                   className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
                 >
                   <option value="">Select Business Size</option>
-                  <option value="startup">Startup (< 10 employees)</option>
+                  <option value="startup">Startup (&lt; 10 employees)</option>
                   <option value="small">Small (10-50 employees)</option>
                   <option value="medium">Medium (50-250 employees)</option>
                   <option value="large">Large (250+ employees)</option>
