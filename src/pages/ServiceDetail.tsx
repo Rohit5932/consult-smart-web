@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, CheckCircle, Clock, FileText, Users, Phone, Mail, MapPin, Star } from "lucide-react";
+import { ArrowLeft, CheckCircle, Clock, FileText, Users, Phone, Mail, MapPin, Star, TrendingUp, BarChart3, IndianRupee, Award } from "lucide-react";
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
@@ -223,14 +223,111 @@ const ServiceDetail = () => {
             </Card>
           </div>
 
+          {/* Analytics Section */}
+          <div className="grid md:grid-cols-4 gap-6 mb-12">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+              <CardContent className="p-6 text-center">
+                <TrendingUp className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-blue-700">2.3M+</div>
+                <div className="text-sm text-blue-600">Users in India</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+              <CardContent className="p-6 text-center">
+                <BarChart3 className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-green-700">98.5%</div>
+                <div className="text-sm text-green-600">Success Rate</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+              <CardContent className="p-6 text-center">
+                <IndianRupee className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-orange-700">₹50K+</div>
+                <div className="text-sm text-orange-600">Avg. Savings</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+              <CardContent className="p-6 text-center">
+                <Award className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-purple-700">24/7</div>
+                <div className="text-sm text-purple-600">Expert Support</div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Detailed Information Tabs */}
-          <Tabs defaultValue="process" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+          <Tabs defaultValue="analytics" className="w-full">
+            <TabsList className="grid w-full grid-cols-5 mb-8">
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="process">Process</TabsTrigger>
               <TabsTrigger value="documents">Documents</TabsTrigger>
               <TabsTrigger value="benefits">Benefits</TabsTrigger>
               <TabsTrigger value="support">Support</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="analytics" className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <BarChart3 className="h-6 w-6" />
+                      Market Insights
+                    </CardTitle>
+                    <CardDescription>
+                      {service.title} importance and trends in India
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                        <span className="text-sm font-medium">Daily Applications</span>
+                        <span className="text-lg font-bold text-blue-600">1,247</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                        <span className="text-sm font-medium">This Month</span>
+                        <span className="text-lg font-bold text-green-600">35,891</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                        <span className="text-sm font-medium">Growth Rate</span>
+                        <span className="text-lg font-bold text-orange-600">+23.5%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="h-6 w-6" />
+                      Business Impact
+                    </CardTitle>
+                    <CardDescription>
+                      Why {service.title} is crucial for Indian businesses
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <span className="text-sm">Mandatory for businesses with turnover &gt;20L</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span className="text-sm">Enables input tax credit claims</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                        <span className="text-sm">Increases business credibility</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                        <span className="text-sm">Required for government tenders</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
             <TabsContent value="process" className="space-y-6">
               <Card>

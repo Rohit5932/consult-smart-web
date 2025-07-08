@@ -159,15 +159,27 @@ const Services = () => {
                       </div>
                     </div>
                     
-                    <Button 
-                      className={`w-full bg-gradient-to-r from-${service.color}-600 to-${service.color}-700 hover:from-${service.color}-700 hover:to-${service.color}-800 text-white font-semibold py-3 rounded-full transform group-hover:scale-105 transition-all duration-300 shadow-lg`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/service/${service.id}`);
-                      }}
-                    >
-                      Learn More & Apply
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline"
+                        className="flex-1 border-2 border-primary/20 hover:border-primary/40 text-primary font-semibold py-3 rounded-full transition-all duration-300"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/service/${service.id}`);
+                        }}
+                      >
+                        Learn More
+                      </Button>
+                      <Button 
+                        className={`flex-1 bg-gradient-to-r from-${service.color}-600 to-${service.color}-700 hover:from-${service.color}-700 hover:to-${service.color}-800 text-white font-semibold py-3 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/service-form/${service.id}`);
+                        }}
+                      >
+                        Apply Now
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               );
