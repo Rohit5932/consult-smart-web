@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, FileText, Calendar, CheckCircle, AlertCircle, Upload, X } from "lucide-react";
+import { ArrowLeft, FileText, Calendar, CheckCircle, AlertCircle, Upload, X, Factory, Stamp, UserCheck, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const ServiceForm = () => {
@@ -49,7 +48,25 @@ const ServiceForm = () => {
     transactionVolume: "",
     // Audit Services fields
     auditType: "",
-    companySize: ""
+    companySize: "",
+    // MSME Registration fields
+    msmeCategory: "", 
+    investmentAmount: "",
+    employeeCount: "",
+    // Digital Signature fields
+    certificateType: "",
+    validityPeriod: "",
+    usageType: "",
+    // Firm Registration fields
+    firmType: "",
+    partnerCount: "",
+    capitalAmount: "",
+    // Loan Pre-check fields
+    loanType: "",
+    loanAmount: "",
+    businessAge: "",
+    annualRevenue: "",
+    creditScore: ""
   });
 
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -108,6 +125,30 @@ const ServiceForm = () => {
       icon: AlertCircle,
       description: "Complete TDS filing and compliance management",
       color: "yellow"
+    },
+    "msme-registration": {
+      title: "MSME Registration Service",
+      icon: Factory,
+      description: "Micro, Small & Medium Enterprise registration and certification",
+      color: "emerald"
+    },
+    "digital-signature": {
+      title: "Digital Signature Service",
+      icon: Stamp,
+      description: "Class 2 & Class 3 Digital Signature Certificate",
+      color: "violet"
+    },
+    "firm-registration": {
+      title: "Firm Registration Service",
+      icon: UserCheck,
+      description: "Partnership firm and proprietorship registration",
+      color: "teal"
+    },
+    "loan-precheck": {
+      title: "Loan Pre-check Service",
+      icon: CreditCard,
+      description: "Business loan eligibility assessment and documentation",
+      color: "amber"
     }
   };
 
@@ -613,6 +654,293 @@ const ServiceForm = () => {
           </>
         );
 
+      case "msme-registration":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="msmeCategory" className="text-sm font-medium">MSME Category *</Label>
+                <select
+                  id="msmeCategory"
+                  name="msmeCategory"
+                  value={formData.msmeCategory}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select MSME Category</option>
+                  <option value="micro">Micro Enterprise</option>
+                  <option value="small">Small Enterprise</option>
+                  <option value="medium">Medium Enterprise</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="investmentAmount" className="text-sm font-medium">Investment in Plant & Machinery (₹) *</Label>
+                <Input
+                  id="investmentAmount"
+                  name="investmentAmount"
+                  type="number"
+                  required
+                  value={formData.investmentAmount}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter investment amount"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="employeeCount" className="text-sm font-medium">Number of Employees</Label>
+                <Input
+                  id="employeeCount"
+                  name="employeeCount"
+                  type="number"
+                  value={formData.employeeCount}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter employee count"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="businessType" className="text-sm font-medium">Business Type *</Label>
+                <select
+                  id="businessType"
+                  name="businessType"
+                  value={formData.businessType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Business Type</option>
+                  <option value="manufacturing">Manufacturing</option>
+                  <option value="service">Service</option>
+                  <option value="trading">Trading</option>
+                </select>
+              </div>
+            </div>
+          </>
+        );
+
+      case "digital-signature":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="certificateType" className="text-sm font-medium">Certificate Type *</Label>
+                <select
+                  id="certificateType"
+                  name="certificateType"
+                  value={formData.certificateType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Certificate Type</option>
+                  <option value="class2">Class 2 DSC</option>
+                  <option value="class3">Class 3 DSC</option>
+                  <option value="dgft">DGFT DSC</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="validityPeriod" className="text-sm font-medium">Validity Period *</Label>
+                <select
+                  id="validityPeriod"
+                  name="validityPeriod"
+                  value={formData.validityPeriod}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Validity</option>
+                  <option value="1year">1 Year</option>
+                  <option value="2years">2 Years</option>
+                  <option value="3years">3 Years</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="usageType" className="text-sm font-medium">Primary Usage *</Label>
+              <select
+                id="usageType"
+                name="usageType"
+                value={formData.usageType}
+                onChange={handleInputChange}
+                className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                required
+              >
+                <option value="">Select Usage Type</option>
+                <option value="gst-filing">GST Filing</option>
+                <option value="income-tax">Income Tax Filing</option>
+                <option value="mca-filing">MCA Filing</option>
+                <option value="tender-bidding">Tender Bidding</option>
+                <option value="banking">Net Banking</option>
+              </select>
+            </div>
+          </>
+        );
+
+      case "firm-registration":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="firmType" className="text-sm font-medium">Firm Type *</Label>
+                <select
+                  id="firmType"
+                  name="firmType"
+                  value={formData.firmType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Firm Type</option>
+                  <option value="partnership">Partnership Firm</option>
+                  <option value="proprietorship">Sole Proprietorship</option>
+                  <option value="llp">Limited Liability Partnership</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="partnerCount" className="text-sm font-medium">Number of Partners</Label>
+                <Input
+                  id="partnerCount"
+                  name="partnerCount"
+                  type="number"
+                  value={formData.partnerCount}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter number of partners"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="capitalAmount" className="text-sm font-medium">Capital Amount (₹)</Label>
+                <Input
+                  id="capitalAmount"
+                  name="capitalAmount"
+                  type="number"
+                  value={formData.capitalAmount}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter capital amount"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="businessType" className="text-sm font-medium">Business Activity *</Label>
+                <select
+                  id="businessType"
+                  name="businessType"
+                  value={formData.businessType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Business Activity</option>
+                  <option value="trading">Trading</option>
+                  <option value="manufacturing">Manufacturing</option>
+                  <option value="service">Service Provider</option>
+                  <option value="consulting">Consulting</option>
+                </select>
+              </div>
+            </div>
+          </>
+        );
+
+      case "loan-precheck":
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="loanType" className="text-sm font-medium">Loan Type *</Label>
+                <select
+                  id="loanType"
+                  name="loanType"
+                  value={formData.loanType}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                  required
+                >
+                  <option value="">Select Loan Type</option>
+                  <option value="term-loan">Term Loan</option>
+                  <option value="working-capital">Working Capital</option>
+                  <option value="equipment-loan">Equipment Loan</option>
+                  <option value="msme-loan">MSME Loan</option>
+                  <option value="mudra-loan">Mudra Loan</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="loanAmount" className="text-sm font-medium">Required Loan Amount (₹) *</Label>
+                <Input
+                  id="loanAmount"
+                  name="loanAmount"
+                  type="number"
+                  required
+                  value={formData.loanAmount}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter loan amount"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="businessAge" className="text-sm font-medium">Business Age</Label>
+                <select
+                  id="businessAge"
+                  name="businessAge"
+                  value={formData.businessAge}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-lg border-2 focus:border-blue-400 bg-white"
+                >
+                  <option value="">Select Business Age</option>
+                  <option value="startup">Startup (Less than 1 year)</option>
+                  <option value="1-3years">1-3 Years</option>
+                  <option value="3-5years">3-5 Years</option>
+                  <option value="5+years">5+ Years</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="annualRevenue" className="text-sm font-medium">Annual Revenue (₹)</Label>
+                <Input
+                  id="annualRevenue"
+                  name="annualRevenue"
+                  type="number"
+                  value={formData.annualRevenue}
+                  onChange={handleInputChange}
+                  className="rounded-lg border-2 focus:border-blue-400"
+                  placeholder="Enter annual revenue"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="creditScore" className="text-sm font-medium">Approximate Credit Score (if known)</Label>
+              <Input
+                id="creditScore"
+                name="creditScore"
+                type="number"
+                value={formData.creditScore}
+                onChange={handleInputChange}
+                className="rounded-lg border-2 focus:border-blue-400"
+                placeholder="Enter credit score (300-850)"
+                min="300"
+                max="850"
+              />
+            </div>
+          </>
+        );
+
       default:
         return null;
     }
@@ -640,7 +968,7 @@ const ServiceForm = () => {
           <div className="flex items-center gap-4">
             <Button 
               variant="outline" 
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/services')}
               className="rounded-full"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -657,12 +985,12 @@ const ServiceForm = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
-            <CardHeader className={`bg-gradient-to-r from-${service.color}-50 to-${service.color}-100 rounded-t-lg`}>
-              <CardTitle className={`flex items-center gap-3 text-2xl text-${service.color}-700`}>
+            <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/20 rounded-t-lg">
+              <CardTitle className="flex items-center gap-3 text-2xl text-primary">
                 <IconComponent className="h-8 w-8" />
                 {service.title}
               </CardTitle>
-              <CardDescription className={`text-${service.color}-600 text-base`}>
+              <CardDescription className="text-primary/80 text-base">
                 {service.description}
               </CardDescription>
             </CardHeader>
@@ -822,7 +1150,7 @@ const ServiceForm = () => {
 
                 <Button 
                   type="submit" 
-                  className={`w-full py-6 text-lg rounded-full bg-gradient-to-r from-${service.color}-600 to-${service.color}-700 hover:from-${service.color}-700 hover:to-${service.color}-800 transform hover:scale-105 transition-all duration-300`}
+                  className="w-full py-6 text-lg rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transform hover:scale-105 transition-all duration-300"
                 >
                   Submit Request
                 </Button>

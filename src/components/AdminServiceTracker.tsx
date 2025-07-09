@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -80,7 +79,11 @@ const AdminServiceTracker = () => {
     "accounting-services": "Accounting Services",
     "tax-planning": "Tax Planning",
     "audit-services": "Audit Services",
-    "compliance": "TDS Compliance"
+    "compliance": "TDS Compliance",
+    "msme-registration": "MSME Registration",
+    "digital-signature": "Digital Signature",
+    "firm-registration": "Firm Registration",
+    "loan-precheck": "Loan Pre-check"
   };
 
   const getDeadline = (request: ServiceRequest) => {

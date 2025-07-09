@@ -2,7 +2,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { FileText, Calculator, TrendingUp, Shield, Building, ClipboardList, Target, Search, FileCheck } from "lucide-react";
+import { FileText, Calculator, TrendingUp, Shield, Building, ClipboardList, Target, Search, FileCheck, Stamp, UserCheck, CreditCard, Factory } from "lucide-react";
 
 const Services = () => {
   const navigate = useNavigate();
@@ -88,6 +88,42 @@ const Services = () => {
       color: "yellow",
       price: "₹1,999/quarter",
       duration: "Quarterly"
+    },
+    {
+      id: "msme-registration",
+      title: "MSME Registration",
+      description: "Micro, Small & Medium Enterprise registration and certification",
+      icon: Factory,
+      color: "emerald",
+      price: "₹1,999",
+      duration: "5-7 days"
+    },
+    {
+      id: "digital-signature",
+      title: "Digital Signature",
+      description: "Class 2 & Class 3 Digital Signature Certificate",
+      icon: Stamp,
+      color: "violet",
+      price: "₹999",
+      duration: "1-2 days"
+    },
+    {
+      id: "firm-registration",
+      title: "Firm Registration",
+      description: "Partnership firm and proprietorship registration",
+      icon: UserCheck,
+      color: "teal",
+      price: "₹3,999",
+      duration: "7-10 days"
+    },
+    {
+      id: "loan-precheck",
+      title: "Loan Pre-check",
+      description: "Business loan eligibility assessment and documentation",
+      icon: CreditCard,
+      color: "amber",
+      price: "₹2,499",
+      duration: "3-5 days"
     }
   ];
 
@@ -132,11 +168,11 @@ const Services = () => {
                   className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-lg overflow-hidden"
                   onClick={() => navigate(`/service/${service.id}`)}
                 >
-                  <div className={`h-2 bg-gradient-to-r from-${service.color}-400 to-${service.color}-600`} />
+                  <div className="h-2 bg-gradient-to-r from-primary to-primary/80" />
                   
                   <CardHeader className="text-center pb-4">
-                    <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-${service.color}-100 to-${service.color}-200 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                      <IconComponent className={`h-8 w-8 text-${service.color}-600`} />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary/10 to-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="h-8 w-8 text-primary" />
                     </div>
                     <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-primary transition-colors">
                       {service.title}
@@ -150,7 +186,7 @@ const Services = () => {
                     
                     <div className="flex justify-between items-center mb-4">
                       <div className="text-center">
-                        <div className={`text-2xl font-bold text-${service.color}-600`}>{service.price}</div>
+                        <div className="text-2xl font-bold text-primary">{service.price}</div>
                         <div className="text-xs text-gray-500">Starting from</div>
                       </div>
                       <div className="text-center">
