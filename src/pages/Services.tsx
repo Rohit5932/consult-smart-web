@@ -171,9 +171,10 @@ const Services = () => {
                         Learn More
                       </Button>
                       <Button 
-                        className={`flex-1 bg-gradient-to-r from-${service.color}-600 to-${service.color}-700 hover:from-${service.color}-700 hover:to-${service.color}-800 text-white font-semibold py-3 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg`}
+                        className="flex-1 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold py-3 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg"
                         onClick={(e) => {
                           e.stopPropagation();
+                          console.log('Navigating to:', `/service-form/${service.id}`);
                           navigate(`/service-form/${service.id}`);
                         }}
                       >
