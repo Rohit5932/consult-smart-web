@@ -47,33 +47,74 @@ const About = () => {
         </div>
       </header>
 
-      {/* About Section */}
+      {/* Hero Section with Professional Image */}
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10"></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Content */}
+              <div className="animate-fade-in">
+                <div className="mb-8">
+                  <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
+                    Meet Your Trusted Tax Expert
+                  </h2>
+                  <h3 className="text-3xl text-primary mb-6 font-semibold animate-pulse">Shivam Kumar</h3>
+                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                    With over 8 years of experience in taxation and business consulting, 
+                    I help individuals and businesses navigate complex tax regulations and achieve financial compliance.
+                  </p>
+                  <div className="flex gap-4">
+                    <Link to="/contact" className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                      Get Consultation
+                    </Link>
+                    <Link to="/services" className="px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 transform hover:scale-105">
+                      View Services
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Professional Image */}
+              <div className="animate-fade-in delay-200">
+                <div className="relative">
+                  <div className="w-full h-96 rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                    <img 
+                      src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
+                      alt="Professional tax consultant working with clients"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
+                  </div>
+                  {/* Floating Stats */}
+                  <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg border animate-bounce">
+                    <div className="text-2xl font-bold text-primary">8+</div>
+                    <div className="text-sm text-muted-foreground">Years Experience</div>
+                  </div>
+                  <div className="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-lg border animate-bounce delay-300">
+                    <div className="text-2xl font-bold text-primary">500+</div>
+                    <div className="text-sm text-muted-foreground">Happy Clients</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            {/* Profile Section */}
-            <div className="text-center mb-16 animate-fade-in">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 mx-auto mb-6 flex items-center justify-center shadow-lg border-2 border-primary/10 hover-scale transition-all duration-300">
-                <span className="text-4xl animate-pulse">👨‍💼</span>
-              </div>
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Meet Your Consultant</h2>
-              <h3 className="text-2xl text-primary mb-4 font-semibold">Shivam Kumar</h3>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                With over 8 years of experience in taxation and business consulting, 
-                I help individuals and businesses navigate complex tax regulations and achieve financial compliance.
-              </p>
-            </div>
-
-            {/* Mission */}
-            <Card className="mb-12 border-primary/20 bg-gradient-to-br from-card to-primary/5 shadow-lg hover-scale transition-all duration-300">
+            <Card className="mb-12 border-primary/20 bg-gradient-to-br from-card to-primary/5 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
               <CardHeader>
-                <CardTitle className="text-primary flex items-center gap-2">
-                  <span className="text-2xl">🎯</span>
+                <CardTitle className="text-primary flex items-center gap-3 text-3xl">
+                  <span className="text-4xl animate-bounce">🎯</span>
                   Our Mission
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed text-lg">
                   To provide reliable, professional, and personalized tax and business consulting services 
                   that help our clients achieve their financial goals while maintaining full compliance 
                   with regulatory requirements. We believe in building long-term relationships based on 
@@ -84,20 +125,21 @@ const About = () => {
 
             <div className="grid md:grid-cols-2 gap-8">
               {/* Experience */}
-              <Card className="border-primary/20 bg-gradient-to-br from-card to-secondary/10 shadow-lg hover-scale transition-all duration-300 group">
+              <Card className="border-primary/20 bg-gradient-to-br from-card to-secondary/10 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group">
                 <CardHeader>
-                  <CardTitle className="text-primary flex items-center gap-2">
-                    <span className="text-2xl">💼</span>
+                  <CardTitle className="text-primary flex items-center gap-3 text-2xl">
+                    <span className="text-3xl group-hover:animate-bounce">💼</span>
                     Professional Experience
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {experience.map((exp, index) => (
-                      <div key={index} className="border-l-4 border-primary/50 pl-4 hover:border-primary transition-colors duration-200 hover:bg-primary/5 p-2 rounded-r">
-                        <div className="font-semibold text-foreground">{exp.role}</div>
-                        <div className="text-sm text-muted-foreground">{exp.company}</div>
-                        <div className="text-sm text-primary font-medium">{exp.year}</div>
+                      <div key={index} className="relative border-l-4 border-primary/50 pl-6 hover:border-primary transition-colors duration-200 hover:bg-primary/5 p-4 rounded-r-lg group/item">
+                        <div className="absolute -left-2 top-4 w-4 h-4 bg-primary rounded-full animate-pulse"></div>
+                        <div className="font-semibold text-foreground text-lg group-hover/item:text-primary transition-colors">{exp.role}</div>
+                        <div className="text-muted-foreground mb-1">{exp.company}</div>
+                        <div className="text-sm text-primary font-medium bg-primary/10 px-2 py-1 rounded inline-block">{exp.year}</div>
                       </div>
                     ))}
                   </div>
@@ -105,19 +147,19 @@ const About = () => {
               </Card>
 
               {/* Certifications */}
-              <Card className="border-primary/20 bg-gradient-to-br from-card to-accent/10 shadow-lg hover-scale transition-all duration-300 group">
+              <Card className="border-primary/20 bg-gradient-to-br from-card to-accent/10 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group">
                 <CardHeader>
-                  <CardTitle className="text-primary flex items-center gap-2">
-                    <span className="text-2xl">🏆</span>
+                  <CardTitle className="text-primary flex items-center gap-3 text-2xl">
+                    <span className="text-3xl group-hover:animate-bounce">🏆</span>
                     Certifications & Qualifications
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {certifications.map((cert, index) => (
-                      <div key={index} className="flex items-center p-2 rounded hover:bg-primary/5 transition-colors duration-200">
-                        <span className="text-primary mr-3 text-lg">✓</span>
-                        <span className="text-foreground">{cert}</span>
+                      <div key={index} className="flex items-center p-3 rounded-lg hover:bg-primary/5 transition-all duration-200 transform hover:scale-105 group/cert">
+                        <span className="text-primary mr-4 text-2xl group-hover/cert:animate-pulse">✓</span>
+                        <span className="text-foreground group-hover/cert:text-primary transition-colors">{cert}</span>
                       </div>
                     ))}
                   </div>
@@ -126,30 +168,54 @@ const About = () => {
             </div>
 
             {/* Why Choose Us */}
-            <Card className="mt-12 border-primary/20 bg-gradient-to-br from-card to-accent/5 shadow-lg hover-scale transition-all duration-300">
+            <Card className="mt-12 border-primary/20 bg-gradient-to-br from-card to-accent/5 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
               <CardHeader>
-                <CardTitle className="text-primary text-center text-3xl mb-6">Why Choose TaxConsult Pro?</CardTitle>
+                <CardTitle className="text-primary text-center text-4xl mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Why Choose TaxConsult Pro?
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="text-center p-6 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 hover:from-primary/10 hover:to-secondary/10 transition-all duration-300 hover-scale group">
-                    <div className="text-4xl mb-4 group-hover:animate-bounce">🎯</div>
-                    <h4 className="font-semibold mb-3 text-primary text-lg">Expertise</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Deep knowledge of tax laws and business regulations</p>
+                <div className="grid md:grid-cols-3 gap-8">
+                  <div className="text-center p-8 rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 hover:from-primary/10 hover:to-secondary/10 transition-all duration-300 transform hover:scale-110 group shadow-lg">
+                    <div className="text-5xl mb-6 group-hover:animate-bounce">🎯</div>
+                    <h4 className="font-bold mb-4 text-primary text-xl">Expertise</h4>
+                    <p className="text-muted-foreground leading-relaxed">Deep knowledge of tax laws and business regulations with 8+ years of experience</p>
                   </div>
-                  <div className="text-center p-6 rounded-lg bg-gradient-to-br from-accent/5 to-primary/5 hover:from-accent/10 hover:to-primary/10 transition-all duration-300 hover-scale group">
-                    <div className="text-4xl mb-4 group-hover:animate-bounce">⏱️</div>
-                    <h4 className="font-semibold mb-3 text-primary text-lg">Timely Service</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Quick turnaround times and deadline adherence</p>
+                  <div className="text-center p-8 rounded-xl bg-gradient-to-br from-accent/5 to-primary/5 hover:from-accent/10 hover:to-primary/10 transition-all duration-300 transform hover:scale-110 group shadow-lg">
+                    <div className="text-5xl mb-6 group-hover:animate-bounce">⏱️</div>
+                    <h4 className="font-bold mb-4 text-primary text-xl">Timely Service</h4>
+                    <p className="text-muted-foreground leading-relaxed">Quick turnaround times and deadline adherence for all your tax needs</p>
                   </div>
-                  <div className="text-center p-6 rounded-lg bg-gradient-to-br from-secondary/5 to-accent/5 hover:from-secondary/10 hover:to-accent/10 transition-all duration-300 hover-scale group">
-                    <div className="text-4xl mb-4 group-hover:animate-bounce">🤝</div>
-                    <h4 className="font-semibold mb-3 text-primary text-lg">Personal Touch</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Personalized service tailored to your needs</p>
+                  <div className="text-center p-8 rounded-xl bg-gradient-to-br from-secondary/5 to-accent/5 hover:from-secondary/10 hover:to-accent/10 transition-all duration-300 transform hover:scale-110 group shadow-lg">
+                    <div className="text-5xl mb-6 group-hover:animate-bounce">🤝</div>
+                    <h4 className="font-bold mb-4 text-primary text-xl">Personal Touch</h4>
+                    <p className="text-muted-foreground leading-relaxed">Personalized service tailored to your specific business requirements</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-16 bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h3 className="text-4xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Ready to Get Started?
+            </h3>
+            <p className="text-xl text-muted-foreground mb-8">
+              Let's discuss your tax and business needs. Schedule a free consultation today!
+            </p>
+            <div className="flex gap-6 justify-center">
+              <Link to="/contact" className="px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg font-semibold">
+                Schedule Consultation
+              </Link>
+              <Link to="/services" className="px-8 py-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 transform hover:scale-105 text-lg font-semibold">
+                Explore Services
+              </Link>
+            </div>
           </div>
         </div>
       </section>
