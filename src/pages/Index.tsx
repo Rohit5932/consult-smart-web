@@ -16,42 +16,42 @@ const Index = () => {
       description: "Complete GST compliance solution with monthly returns and expert guidance",
       icon: "📊",
       color: "bg-gradient-to-br from-blue-500 to-blue-600",
-      link: "/services/gst"
+      link: "/service/gst"
     },
     {
       title: "Income Tax Returns",
       description: "Professional ITR filing for individuals, businesses, and startups",
       icon: "💰",
       color: "bg-gradient-to-br from-green-500 to-green-600",
-      link: "/services/itr"
+      link: "/service/itr"
     },
     {
       title: "Business Registration",
       description: "Company incorporation, LLP formation, and partnership registration",
       icon: "🏢",
       color: "bg-gradient-to-br from-purple-500 to-purple-600",
-      link: "/services/business"
+      link: "/service/business"
     },
     {
       title: "Tax Planning",
       description: "Strategic tax planning to minimize liability and maximize savings",
       icon: "🎯",
       color: "bg-gradient-to-br from-orange-500 to-orange-600",
-      link: "/services/tax-planning"
+      link: "/service/tax-planning"
     },
     {
       title: "Audit Services",
       description: "Statutory audits, internal audits, and compliance management",
       icon: "🔍",
       color: "bg-gradient-to-br from-red-500 to-red-600",
-      link: "/services/audit"
+      link: "/service/audit"
     },
     {
       title: "Accounting Services",
       description: "Bookkeeping, financial statements, and accounting management",
       icon: "📚",
       color: "bg-gradient-to-br from-teal-500 to-teal-600",
-      link: "/services/accounting"
+      link: "/service/accounting"
     }
   ];
 
@@ -287,9 +287,9 @@ const Index = () => {
             <div>
               <h5 className="font-semibold mb-4">Services</h5>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link to="/services/gst" className="hover:text-white transition-colors">GST Filing</Link></li>
-                <li><Link to="/services/itr" className="hover:text-white transition-colors">Income Tax Returns</Link></li>
-                <li><Link to="/services/business" className="hover:text-white transition-colors">Business Registration</Link></li>
+                <li><Link to="/service/gst" className="hover:text-white transition-colors">GST Filing</Link></li>
+                <li><Link to="/service/itr" className="hover:text-white transition-colors">Income Tax Returns</Link></li>
+                <li><Link to="/service/business" className="hover:text-white transition-colors">Business Registration</Link></li>
               </ul>
             </div>
             <div>
