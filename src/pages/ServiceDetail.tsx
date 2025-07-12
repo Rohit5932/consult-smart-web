@@ -11,7 +11,7 @@ const ServiceDetail = () => {
   const navigate = useNavigate();
   
   const serviceDetails = {
-    "gst": {
+    "gst-registration": {
       title: "GST Registration & Filing Services",
       description: "Complete GST compliance solution including registration, monthly filing, and expert consultation for businesses of all sizes",
       price: "₹2,999",
@@ -85,7 +85,66 @@ const ServiceDetail = () => {
         "Professional consultation and ongoing support"
       ]
     },
-    "itr": {
+    "gst-filing": {
+      title: "GST Filing Services",
+      description: "Monthly and quarterly GST return filing services with expert consultation and compliance management",
+      price: "₹999",
+      originalPrice: "₹1,499",
+      duration: "Same day",
+      rating: 4.9,
+      reviews: 203,
+      color: "green",
+      whyNeeded: [
+        "Monthly compliance requirement under GST law",
+        "Mandatory for maintaining GST registration validity", 
+        "Required to claim input tax credit benefits",
+        "Essential for avoiding penalties and interest charges",
+        "Necessary for business credibility and legal standing"
+      ],
+      impact: [
+        "Ensures continuous input tax credit claims",
+        "Maintains good standing with tax authorities",
+        "Reduces compliance burden on business owners",
+        "Provides accurate financial reporting for decision making",
+        "Prevents costly penalties and legal complications"
+      ],
+      governmentRules: [
+        "GSTR-1 filing by 11th of next month",
+        "GSTR-3B filing by 20th of next month", 
+        "Late filing penalty: ₹200 per day per return",
+        "Interest @ 18% on delayed tax payment",
+        "GST annual return GSTR-9 by December 31st"
+      ],
+      features: [
+        "Monthly GSTR-1 sales return filing",
+        "Monthly GSTR-3B payment return filing",
+        "Input tax credit reconciliation",
+        "Error-free return preparation",
+        "Deadline management and reminders"
+      ],
+      process: [
+        "Sales data collection and validation",
+        "GSTR-1 preparation and filing",
+        "Purchase data verification",
+        "GSTR-3B preparation with tax calculation",
+        "Online filing and acknowledgment"
+      ],
+      documents: [
+        "Sales invoices for the month",
+        "Purchase invoices and bills",
+        "Credit notes and debit notes",
+        "Export and import documents",
+        "Previous month's closing balances"
+      ],
+      benefits: [
+        "Timely compliance without penalties",
+        "Maximum input tax credit benefits",
+        "Professional handling of complex returns",
+        "Regular monitoring and support",
+        "Peace of mind with expert management"
+      ]
+    },
+    "itr-filing": {
       title: "Income Tax Return Filing",
       description: "Professional ITR filing services for individuals, HUF, and businesses with maximum refund optimization and expert tax planning",
       price: "₹1,499",
@@ -159,7 +218,7 @@ const ServiceDetail = () => {
         "Peace of mind with professional handling"
       ]
     },
-    "business": {
+    "company-registration": {
       title: "Business Registration Services",
       description: "Complete business incorporation services including Private Limited Company, LLP, Partnership, and Proprietorship registration with legal compliance",
       price: "₹8,999",
@@ -229,6 +288,125 @@ const ServiceDetail = () => {
         "Tax benefits and exemptions available to companies",
         "Easier business expansion and partnership opportunities",
         "Professional legal structure for business operations"
+      ]
+    },
+    "business-license": {
+      title: "Business License & Permits",
+      description: "Complete business licensing services including trade license, professional permits, and regulatory approvals for various business types",
+      price: "₹2,499",
+      originalPrice: "₹3,999",
+      duration: "10-15 days",
+      rating: 4.5,
+      reviews: 134,
+      color: "red",
+      whyNeeded: [
+        "Legal requirement for conducting business operations",
+        "Mandatory for opening business bank accounts",
+        "Required for GST registration and tax compliance",
+        "Essential for business insurance and premises rental",
+        "Necessary for participating in government tenders"
+      ],
+      impact: [
+        "Legal authorization to conduct business activities",
+        "Enhanced business credibility and professional image",
+        "Access to formal banking and financial services",
+        "Eligibility for business loans and credit facilities",
+        "Protection from legal actions and penalties"
+      ],
+      governmentRules: [
+        "Municipal Corporation Act - Trade license mandatory",
+        "Shops and Establishments Act registration required",
+        "Professional Tax registration in applicable states",
+        "Environmental clearance for specific industries",
+        "Fire safety clearance for commercial establishments"
+      ],
+      features: [
+        "Trade license application and approval",
+        "Shops & Establishments Act registration",
+        "Professional tax registration",
+        "FSSAI license for food businesses",
+        "Industry-specific permits and clearances"
+      ],
+      process: [
+        "Business activity analysis and license requirement assessment",
+        "Application preparation with required documents",
+        "Submission to respective municipal/government authorities",
+        "Follow-up for queries and additional requirements",
+        "License approval and certificate collection"
+      ],
+      documents: [
+        "Business registration certificate",
+        "Property ownership or rental agreement",
+        "NOC from property owner",
+        "Identity and address proof of proprietor/directors",
+        "Photographs of business premises",
+        "Utility bills for address verification"
+      ],
+      benefits: [
+        "Complete legal compliance for business operations",
+        "Enhanced credibility with customers and vendors",
+        "Access to formal business ecosystem",
+        "Eligibility for government schemes and subsidies",
+        "Professional business setup and operations"
+      ]
+    },
+    "accounting-services": {
+      title: "Accounting & Bookkeeping Services",
+      description: "Professional accounting services including bookkeeping, financial statement preparation, and management reporting for businesses",
+      price: "₹4,999",
+      originalPrice: "₹6,999",
+      duration: "Monthly",
+      rating: 4.7,
+      reviews: 178,
+      color: "cyan",
+      whyNeeded: [
+        "Legal requirement for maintaining proper books of accounts",
+        "Essential for tax compliance and return filing",
+        "Required for business loan applications and credit assessment",
+        "Necessary for informed business decision making",
+        "Mandatory for companies under Companies Act 2013"
+      ],
+      impact: [
+        "Accurate financial records for better business control",
+        "Improved cash flow management and cost control",
+        "Enhanced business credibility with stakeholders",
+        "Better compliance with tax and regulatory requirements",
+        "Data-driven decision making for business growth"
+      ],
+      governmentRules: [
+        "Companies Act 2013 - Mandatory books of accounts",
+        "Income Tax Act - Maintenance of books for tax audit",
+        "GST Act - Proper records for input tax credit claims",
+        "Accounting Standards as per ICAI guidelines",
+        "Digital record maintenance requirements"
+      ],
+      features: [
+        "Daily transaction recording and bookkeeping",
+        "Monthly financial statements preparation",
+        "Bank reconciliation and cash flow management",
+        "Expense tracking and budget analysis",
+        "MIS reports and business analytics"
+      ],
+      process: [
+        "Chart of accounts setup based on business needs",
+        "Daily transaction recording from source documents",
+        "Monthly bank reconciliation and adjustments",
+        "Financial statements preparation (P&L, Balance Sheet)",
+        "Management reporting and analysis"
+      ],
+      documents: [
+        "Bank statements and transaction records",
+        "Sales invoices and purchase bills",
+        "Expense receipts and payment vouchers",
+        "Salary and employee expense records",
+        "Asset purchase and depreciation schedules"
+      ],
+      benefits: [
+        "Professional financial record maintenance",
+        "Real-time business performance monitoring",
+        "Tax-ready accounts for compliance",
+        "Better cash flow and expense control",
+        "Expert financial advice and consultation"
       ]
     },
     "tax-planning": {
@@ -302,7 +480,7 @@ const ServiceDetail = () => {
         "Peace of mind with professional financial management"
       ]
     },
-    "audit": {
+    "audit-services": {
       title: "Audit & Assurance Services",
       description: "Professional statutory and internal audit services ensuring regulatory compliance, risk management, and business process optimization",
       price: "₹15,999",
@@ -373,6 +551,303 @@ const ServiceDetail = () => {
         "Better financial reporting and transparency",
         "Expert recommendations for operational improvements",
         "Professional assurance on financial statements accuracy"
+      ]
+    },
+    "compliance": {
+      title: "TDS Compliance Services",
+      description: "Complete TDS compliance management including registration, deduction, deposit, and quarterly return filing with expert consultation",
+      price: "₹1,999",
+      originalPrice: "₹2,999",
+      duration: "Quarterly",
+      rating: 4.6,
+      reviews: 145,
+      color: "yellow",
+      whyNeeded: [
+        "Legal obligation under Income Tax Act for specified payments",
+        "Mandatory for payments above prescribed threshold limits",
+        "Required to avoid TDS penalties and interest charges",
+        "Essential for maintaining good credit rating with tax department",
+        "Necessary for claiming input tax credit on TDS"
+      ],
+      impact: [
+        "Ensures full compliance with TDS regulations",
+        "Avoids costly penalties and legal complications",
+        "Maintains good standing with income tax authorities",
+        "Proper documentation for audit and verification",
+        "Timely deposit prevents interest accumulation"
+      ],
+      governmentRules: [
+        "TDS deduction mandatory on specified payments above limits",
+        "TDS deposit by 7th of next month",
+        "Quarterly TDS return filing by specified dates",
+        "TDS certificate issuance within prescribed time",
+        "Penalty for late deposit: 1% per month",
+        "Non-compliance attracts penalty under Section 271C"
+      ],
+      features: [
+        "TDS calculation and deduction management",
+        "Timely TDS deposit and challan generation",
+        "Quarterly TDS return preparation and filing",
+        "TDS certificate generation and distribution",
+        "Compliance monitoring and penalty prevention"
+      ],
+      process: [
+        "TDS liability identification and calculation",
+        "Monthly TDS deduction and deposit",
+        "Maintenance of TDS records and registers",
+        "Quarterly TDS return preparation",
+        "TDS certificate generation and dispatch"
+      ],
+      documents: [
+        "Payment vouchers and invoices for TDS calculation",
+        "Vendor PAN details and TDS certificates",
+        "Previous quarter TDS returns and challans",
+        "Bank statements showing TDS deposits",
+        "TDS reconciliation statements"
+      ],
+      benefits: [
+        "Complete TDS compliance without penalties",
+        "Professional handling of complex TDS matters",
+        "Timely certificate generation for vendors",
+        "Expert consultation on TDS regulations",
+        "Peace of mind with systematic compliance"
+      ]
+    },
+    "msme-registration": {
+      title: "MSME Registration Services",
+      description: "Complete MSME (Udyam) registration for Micro, Small & Medium Enterprises with government benefits and certification assistance",
+      price: "₹1,999",
+      originalPrice: "₹2,999",
+      duration: "5-7 days",
+      rating: 4.7,
+      reviews: 198,
+      color: "emerald",
+      whyNeeded: [
+        "Access to government schemes and subsidies for MSMEs",
+        "Priority lending and credit facilities from banks",
+        "Protection against delayed payments under MSMED Act",
+        "Preference in government procurement and tenders",
+        "Exemption from various compliances and reduced fees"
+      ],
+      impact: [
+        "Substantial cost savings through government incentives",
+        "Enhanced access to credit and financial support",
+        "Legal protection and faster payment recovery",
+        "Competitive advantage in government contracts",
+        "Reduced regulatory burden and compliance costs"
+      ],
+      governmentRules: [
+        "MSMED Act 2006 - Micro, Small and Medium Enterprises Development",
+        "Udyam Registration mandatory from July 2020",
+        "Classification based on investment and turnover criteria",
+        "Annual self-declaration of performance required",
+        "Benefits include priority sector lending, subsidies, and preferences"
+      ],
+      features: [
+        "Complete Udyam registration process",
+        "Investment and turnover criteria verification",
+        "Government portal application and approval",
+        "MSME certificate download and verification",
+        "Ongoing compliance support and guidance"
+      ],
+      process: [
+        "Business activity and size assessment for MSME eligibility",
+        "Aadhaar verification and business details collection",
+        "Investment and turnover calculation and documentation",
+        "Online Udyam registration portal application",
+        "Registration approval and certificate generation"
+      ],
+      documents: [
+        "Aadhaar card of business owner/authorized person",
+        "Business investment details and asset valuation",
+        "Previous year turnover statements and financials",
+        "Business registration certificate/GST registration",
+        "Bank statements and investment proofs"
+      ],
+      benefits: [
+        "Access to 60+ government schemes and incentives",
+        "Priority sector lending with lower interest rates",
+        "Protection under MSMED Act for payment delays",
+        "Preference in government tenders and contracts",
+        "Reduced fees for various registrations and compliances"
+      ]
+    },
+    "digital-signature": {
+      title: "Digital Signature Certificate (DSC)",
+      description: "Class 2 & Class 3 Digital Signature Certificate procurement for secure online document signing and government filing compliance",
+      price: "₹999",
+      originalPrice: "₹1,499",
+      duration: "1-2 days",
+      rating: 4.8,
+      reviews: 267,
+      color: "violet",
+      whyNeeded: [
+        "Mandatory for company incorporation and annual filing",
+        "Required for all government portal submissions and e-tenders",
+        "Essential for GST, income tax, and other online filings",
+        "Legal requirement for digital document authentication",
+        "Necessary for secure online business transactions"
+      ],
+      impact: [
+        "Enables secure and legally valid digital transactions",
+        "Reduces paper work and speeds up compliance processes",
+        "Provides non-repudiation and document integrity",
+        "Essential for participating in digital economy",
+        "Saves time and cost in document processing"
+      ],
+      governmentRules: [
+        "Information Technology Act 2000 - Legal framework for digital signatures",
+        "Class 2 DSC for individual and organization verification",
+        "Class 3 DSC for high security transactions and e-commerce",
+        "Validity period: 1-3 years depending on certificate type",
+        "Issued by Certifying Authorities licensed by Controller of CAs"
+      ],
+      features: [
+        "Class 2 DSC for routine compliance and filings",
+        "Class 3 DSC for high-value transactions and e-tendering",
+        "USB token-based secure storage device",
+        "Installation support and usage guidance",
+        "Renewal assistance before expiry"
+      ],
+      process: [
+        "DSC type selection based on usage requirements",
+        "Document verification and application form completion",
+        "Biometric verification and photograph capture",
+        "Certificate generation by authorized CA",
+        "USB token delivery with installation support"
+      ],
+      documents: [
+        "PAN card (mandatory for all DSC applications)",
+        "Aadhaar card or voter ID for address proof",
+        "Passport size photograph (recent)",
+        "Mobile number and email address for verification",
+        "Organization documents (for organization DSC)"
+      ],
+      benefits: [
+        "Legally valid digital signature with non-repudiation",
+        "Secure document signing and authentication",
+        "Faster processing of government applications",
+        "Enhanced security for online transactions",
+        "Professional digital identity for business use"
+      ]
+    },
+    "firm-registration": {
+      title: "Firm Registration Services",
+      description: "Complete partnership firm and proprietorship registration with legal documentation, compliance setup, and ongoing support",
+      price: "₹3,999",
+      originalPrice: "₹5,999",
+      duration: "7-10 days",
+      rating: 4.5,
+      reviews: 176,
+      color: "teal",
+      whyNeeded: [
+        "Legal recognition and separate business identity establishment",
+        "Essential for business bank account opening and credit facilities",
+        "Required for business licenses, permits, and regulatory approvals",
+        "Mandatory for GST registration and tax compliance",
+        "Necessary for business contracts and legal transactions"
+      ],
+      impact: [
+        "Legal business structure with defined ownership and liability",
+        "Enhanced credibility with customers, vendors, and financial institutions",
+        "Access to formal banking system and business credit",
+        "Simplified tax structure and compliance management",
+        "Professional business setup enabling growth and expansion"
+      ],
+      governmentRules: [
+        "Partnership Act 1932 for partnership firm registration",
+        "Registration optional but recommended for legal protection",
+        "Partnership deed mandatory for defining terms and conditions",
+        "Minimum 2 partners required, maximum 20 for banking business",
+        "Registration with Registrar of Firms in respective state"
+      ],
+      features: [
+        "Partnership deed drafting and registration",
+        "Firm name availability check and reservation",
+        "Registration with Registrar of Firms",
+        "PAN and TAN application for the firm",
+        "Bank account opening assistance and guidance"
+      ],
+      process: [
+        "Firm name search and availability verification",
+        "Partnership deed preparation with terms and conditions",
+        "Partners' details collection and verification",
+        "Application submission to Registrar of Firms",
+        "Registration certificate issuance and PAN application"
+      ],
+      documents: [
+        "Partners' PAN cards and Aadhaar cards",
+        "Address proof of firm's principal place of business",
+        "NOC from property owner for using business address",
+        "Partners' photographs and identity proofs",
+        "Utility bills for business address verification"
+      ],
+      benefits: [
+        "Legal recognition and protection under Partnership Act",
+        "Separate business identity with professional credibility",
+        "Access to business banking and credit facilities",
+        "Simplified tax structure with partner-wise profit sharing",
+        "Foundation for future business expansion and partnerships"
+      ]
+    },
+    "loan-precheck": {
+      title: "Business Loan Pre-check Services",
+      description: "Comprehensive business loan eligibility assessment, documentation support, and application assistance for optimal approval chances",
+      price: "₹2,499",
+      originalPrice: "₹3,999",
+      duration: "3-5 days",
+      rating: 4.6,
+      reviews: 154,
+      color: "amber",
+      whyNeeded: [
+        "Assess loan eligibility before formal application to avoid rejections",
+        "Optimize documentation and financial presentation for better terms",
+        "Understanding various loan options and their suitability",
+        "Professional guidance on improving credit profile and eligibility",
+        "Save time and effort with pre-qualified loan applications"
+      ],
+      impact: [
+        "Higher loan approval chances with optimized application",
+        "Better interest rates and terms through proper positioning",
+        "Reduced application rejections and credit score impact",
+        "Access to suitable loan products matching business needs",
+        "Professional documentation ensuring faster processing"
+      ],
+      governmentRules: [
+        "RBI guidelines for business lending and eligibility criteria",
+        "CIBIL score requirements for different loan categories",
+        "Priority sector lending norms for MSME businesses",
+        "Documentation requirements as per banking regulations",
+        "Know Your Customer (KYC) and due diligence norms"
+      ],
+      features: [
+        "Comprehensive loan eligibility assessment",
+        "Credit score analysis and improvement recommendations",
+        "Financial statement optimization and presentation",
+        "Bank and lender comparison with best options",
+        "Complete documentation support and verification"
+      ],
+      process: [
+        "Business and financial profile assessment",
+        "Credit score analysis and improvement planning",
+        "Loan requirement analysis and product matching",
+        "Financial documentation preparation and optimization",
+        "Lender identification and application strategy development"
+      ],
+      documents: [
+        "Business registration and incorporation certificates",
+        "Financial statements for last 2-3 years",
+        "Bank statements for all business accounts",
+        "GST returns and income tax returns",
+        "Project report and business plan",
+        "Collateral documents and asset valuations"
+      ],
+      benefits: [
+        "Professional loan eligibility assessment and guidance",
+        "Higher approval chances with optimized documentation",
+        "Access to competitive interest rates and terms",
+        "Time and cost savings through pre-qualification",
+        "Expert support throughout the loan application process"
       ]
     },
     "accounting": {
@@ -457,7 +932,7 @@ const ServiceDetail = () => {
         <Card className="max-w-md">
           <CardContent className="p-8 text-center">
             <h2 className="text-xl font-bold text-red-600 mb-2">Service Not Found</h2>
-            <p className="text-gray-600 mb-4">The requested service could not be found.</p>
+            <p className="text-gray-600 mb-4">The requested service "{serviceId}" could not be found. Please check the service ID and try again.</p>
             <Button onClick={() => navigate('/services')}>Back to Services</Button>
           </CardContent>
         </Card>
