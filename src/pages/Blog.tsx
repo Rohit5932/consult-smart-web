@@ -1,12 +1,16 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Calendar, Clock, User, TrendingUp, FileText, Building2 } from "lucide-react";
 
 const Blog = () => {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
   const articles = [
     {
+      id: "gst-filing-deadlines-2024",
       title: "GST Filing Deadlines for 2024: Complete Guide",
       excerpt: "Stay updated with all GST filing deadlines and avoid penalties. Complete guide for businesses.",
       category: "GST Updates",
@@ -16,6 +20,7 @@ const Blog = () => {
       featured: true
     },
     {
+      id: "income-tax-exemptions-80c",
       title: "Income Tax Exemptions Under Section 80C",
       excerpt: "Maximize your tax savings with these Section 80C investment options and deductions.",
       category: "Tax Tips",
@@ -25,6 +30,7 @@ const Blog = () => {
       featured: false
     },
     {
+      id: "company-registration-process-2024",
       title: "New Company Registration Process 2024",
       excerpt: "Step-by-step guide to register your company online with updated government procedures.",
       category: "Business Registration",
@@ -34,6 +40,7 @@ const Blog = () => {
       featured: false
     },
     {
+      id: "tds-rates-fy-2024-25",
       title: "TDS Rates for FY 2024-25: What You Need to Know",
       excerpt: "Updated TDS rates and thresholds for the current financial year with practical examples.",
       category: "Government Updates",
@@ -43,6 +50,7 @@ const Blog = () => {
       featured: false
     },
     {
+      id: "small-business-tax-planning",
       title: "Small Business Tax Planning Strategies",
       excerpt: "Effective tax planning strategies for small businesses to minimize tax liability legally.",
       category: "Tax Tips",
@@ -52,6 +60,7 @@ const Blog = () => {
       featured: false
     },
     {
+      id: "gst-input-tax-credit-rules",
       title: "GST Input Tax Credit: Rules and Regulations",
       excerpt: "Understanding ITC rules, eligibility criteria, and common mistakes to avoid.",
       category: "GST Updates",
@@ -63,6 +72,10 @@ const Blog = () => {
   ];
 
   const categories = ["All", "Tax Tips", "GST Updates", "Government Updates", "Business Registration"];
+
+  const filteredArticles = selectedCategory === "All" 
+    ? articles 
+    : articles.filter(article => article.category === selectedCategory);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -133,8 +146,13 @@ const Blog = () => {
               {categories.map((category, index) => (
                 <Badge 
                   key={index} 
-                  variant="outline" 
-                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-300 transform hover:scale-105 px-4 py-2 text-sm shadow-sm"
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`cursor-pointer transition-all duration-300 transform hover:scale-105 px-4 py-2 text-sm shadow-sm ${
+                    selectedCategory === category 
+                      ? "bg-primary text-primary-foreground" 
+                      : "hover:bg-primary hover:text-primary-foreground"
+                  }`}
                 >
                   {category !== "All" && getCategoryIcon(category)}
                   <span className={category !== "All" ? "ml-2" : ""}>{category}</span>
@@ -143,7 +161,7 @@ const Blog = () => {
             </div>
 
             {/* Featured Article */}
-            {articles.filter(article => article.featured).map((article, index) => (
+            {filteredArticles.filter(article => article.featured).map((article, index) => (
               <Card key={index} className="mb-12 overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-primary/20 bg-gradient-to-br from-card to-primary/5">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="relative h-64 md:h-auto">
@@ -174,15 +192,19 @@ const Blog = () => {
                         </div>
                       </div>
                     </div>
-                    <h3 className="text-2xl font-bold mb-4 text-foreground hover:text-primary transition-colors cursor-pointer">
-                      {article.title}
-                    </h3>
+                    <Link to={`/blog/${article.id}`}>
+                      <h3 className="text-2xl font-bold mb-4 text-foreground hover:text-primary transition-colors cursor-pointer">
+                        {article.title}
+                      </h3>
+                    </Link>
                     <p className="text-muted-foreground mb-6 leading-relaxed">
                       {article.excerpt}
                     </p>
-                    <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 self-start shadow-lg">
-                      Read Full Article
-                    </button>
+                    <Link to={`/blog/${article.id}`}>
+                      <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 self-start shadow-lg">
+                        Read Full Article
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </Card>
@@ -190,8 +212,9 @@ const Blog = () => {
 
             {/* Articles Grid */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {articles.filter(article => !article.featured).map((article, index) => (
-                <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 group border-primary/20 bg-gradient-to-br from-card to-secondary/5">
+              {filteredArticles.filter(article => !article.featured).map((article, index) => (
+                <Link to={`/blog/${article.id}`} key={index}>
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 group border-primary/20 bg-gradient-to-br from-card to-secondary/5">
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={article.image} 
@@ -238,7 +261,8 @@ const Blog = () => {
                       </div>
                     </div>
                   </CardContent>
-                </Card>
+                  </Card>
+                </Link>
               ))}
             </div>
 

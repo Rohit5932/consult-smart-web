@@ -13,6 +13,7 @@ import ServiceDetail from "./pages/ServiceDetail";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
+import ArticleDetail from "./pages/ArticleDetail";
 import Updates from "./pages/Updates";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminServices from "./pages/AdminServices";
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:articleId" element={<ArticleDetail />} />
             <Route path="/updates" element={<Updates />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/service-form/:serviceType" element={<ServiceForm />} />
