@@ -69,7 +69,7 @@ const AdminPanel = () => {
         .from('user_data')
         .select(`
           *,
-          profiles:user_id (
+          profiles!user_data_user_id_fkey (
             id,
             email,
             full_name,

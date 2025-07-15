@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 
 import SEO from "@/components/SEO";
-import { Navigation } from "@/components/Navigation";
+import Navigation from "@/components/Navigation";
 
 const services = [
   {
