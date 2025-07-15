@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,7 +68,7 @@ const AdminPanel = () => {
         .from('user_data')
         .select(`
           *,
-          profiles!user_data_user_id_fkey (
+          profiles (
             id,
             email,
             full_name,
