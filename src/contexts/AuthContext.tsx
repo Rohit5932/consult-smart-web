@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, AuthError, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -48,7 +47,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string): Promise<Profile | null> => {
     try {
       console.log('Fetching profile for user:', userId);
       const { data, error } = await supabase
@@ -59,102 +58,107 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (error) {
         console.error('Error fetching profile:', error);
+        // If profile doesn't exist, create one with default role
+        if (error.code === 'PGRST116') {
+          console.log('Profile not found, user might be new');
+          return {
+            id: userId,
+            email: null,
+            full_name: null,
+            avatar_url: null,
+            role: 'user'
+          };
+        }
         return null;
       }
 
-      console.log('Profile fetched:', data);
+      console.log('Profile fetched successfully:', data);
       return data;
     } catch (error) {
-      console.error('Profile fetch error:', error);
+      console.error('Profile fetch exception:', error);
       return null;
     }
   };
 
   useEffect(() => {
-    let isMounted = true;
+    let mounted = true;
 
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.id);
-      
-      if (!isMounted) return;
-      
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        // Fetch profile for authenticated user
-        try {
-          const userProfile = await fetchProfile(session.user.id);
-          if (isMounted) {
-            setProfile(userProfile);
-          }
-        } catch (error) {
-          console.error('Error fetching profile in auth state change:', error);
-          if (isMounted) {
-            setProfile(null);
-          }
-        }
-      } else {
-        if (isMounted) {
-          setProfile(null);
-        }
-      }
-      
-      if (isMounted) {
-        setLoading(false);
-      }
-    });
-
-    // Check for existing session
-    const initializeAuth = async () => {
+    // Initialize auth state
+    const initAuth = async () => {
       try {
+        console.log('Initializing auth...');
+        
+        // Get current session
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Error getting session:', error);
-          if (isMounted) {
+          console.error('Session error:', error);
+          if (mounted) {
             setLoading(false);
           }
           return;
         }
 
-        console.log('Initial session:', session?.user?.id);
-        
-        if (!isMounted) return;
-        
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          try {
+        console.log('Current session:', session?.user?.id || 'No session');
+
+        if (mounted) {
+          setSession(session);
+          setUser(session?.user || null);
+
+          if (session?.user) {
+            console.log('User found, fetching profile...');
             const userProfile = await fetchProfile(session.user.id);
-            if (isMounted) {
+            if (mounted) {
               setProfile(userProfile);
+              console.log('Profile set:', userProfile?.role || 'No profile');
             }
-          } catch (error) {
-            console.error('Error fetching profile in initialization:', error);
-            if (isMounted) {
-              setProfile(null);
-            }
+          } else {
+            setProfile(null);
           }
-        }
-        
-        if (isMounted) {
+          
           setLoading(false);
+          console.log('Auth initialization complete');
         }
       } catch (error) {
-        console.error('Error initializing auth:', error);
-        if (isMounted) {
+        console.error('Auth initialization error:', error);
+        if (mounted) {
           setLoading(false);
         }
       }
     };
 
-    initializeAuth();
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event, session?.user?.id || 'No user');
+      
+      if (!mounted) return;
+
+      setSession(session);
+      setUser(session?.user || null);
+
+      if (session?.user && event === 'SIGNED_IN') {
+        console.log('User signed in, fetching profile...');
+        const userProfile = await fetchProfile(session.user.id);
+        if (mounted) {
+          setProfile(userProfile);
+          console.log('Profile updated:', userProfile?.role || 'No profile');
+        }
+      } else if (event === 'SIGNED_OUT') {
+        console.log('User signed out');
+        if (mounted) {
+          setProfile(null);
+        }
+      }
+
+      if (mounted) {
+        setLoading(false);
+      }
+    });
+
+    initAuth();
 
     return () => {
-      isMounted = false;
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
@@ -288,7 +292,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInWithOTP = async (phone: string) => {
     try {
-      // Ensure phone number has proper format
       const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
       
       const { error } = await supabase.auth.signInWithOtp({
@@ -324,7 +327,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const verifyOTP = async (phone: string, token: string) => {
     try {
-      // Ensure phone number has proper format
       const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
       
       const { error } = await supabase.auth.verifyOtp({
