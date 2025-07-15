@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { Chrome, Phone, Mail } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export const AuthForm = () => {
   const [email, setEmail] = useState('');
@@ -19,42 +20,171 @@ export const AuthForm = () => {
   const [loading, setLoading] = useState(false);
 
   const { signIn, signUp, signInWithGoogle, signInWithOTP, verifyOTP, resetPassword } = useAuth();
+  const { toast } = useToast();
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    // Remove all non-digit characters for validation
+    const digitsOnly = phone.replace(/\D/g, '');
+    // Should have at least 10 digits (minimum for most countries)
+    return digitsOnly.length >= 10;
+  };
+
+  const formatPhoneNumber = (phone: string) => {
+    // Remove all non-digit characters
+    const digitsOnly = phone.replace(/\D/g, '');
+    // Add + prefix if not present
+    return digitsOnly.startsWith('1') ? `+${digitsOnly}` : `+1${digitsOnly}`;
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateEmail(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Invalid Password",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
-    await signIn(email, password);
-    setLoading(false);
+    try {
+      await signIn(email, password);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateEmail(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Invalid Password",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!fullName.trim()) {
+      toast({
+        title: "Missing Full Name",
+        description: "Please enter your full name",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
-    await signUp(email, password, fullName);
-    setLoading(false);
+    try {
+      await signUp(email, password, fullName.trim());
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePhoneAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     
     if (!isOtpSent) {
-      const { error } = await signInWithOTP(phone);
-      if (!error) {
-        setIsOtpSent(true);
+      if (!validatePhone(phone)) {
+        toast({
+          title: "Invalid Phone Number",
+          description: "Please enter a valid phone number with at least 10 digits",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const formattedPhone = formatPhoneNumber(phone);
+        const { error } = await signInWithOTP(formattedPhone);
+        if (!error) {
+          setIsOtpSent(true);
+          setPhone(formattedPhone); // Store the formatted phone number
+        }
+      } finally {
+        setLoading(false);
       }
     } else {
-      await verifyOTP(phone, otp);
+      if (otp.length !== 6) {
+        toast({
+          title: "Invalid OTP",
+          description: "Please enter a 6-digit OTP code",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const { error } = await verifyOTP(phone, otp);
+        if (!error) {
+          // Reset form on success
+          setIsOtpSent(false);
+          setPhone('');
+          setOtp('');
+        }
+      } finally {
+        setLoading(false);
+      }
     }
-    setLoading(false);
   };
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    
+    if (!email || !validateEmail(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address first",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
-    await resetPassword(email);
-    setLoading(false);
+    try {
+      await resetPassword(email);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      await signInWithGoogle();
+    } finally {
+      // Don't set loading to false immediately for OAuth as it redirects
+      setTimeout(() => setLoading(false), 2000);
+    }
   };
 
   return (
@@ -86,6 +216,7 @@ export const AuthForm = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled={loading}
                   />
                 </div>
                 <div className="space-y-2">
@@ -97,6 +228,8 @@ export const AuthForm = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    disabled={loading}
+                    minLength={6}
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
@@ -128,6 +261,7 @@ export const AuthForm = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
+                    disabled={loading}
                   />
                 </div>
                 <div className="space-y-2">
@@ -139,6 +273,7 @@ export const AuthForm = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled={loading}
                   />
                 </div>
                 <div className="space-y-2">
@@ -146,10 +281,12 @@ export const AuthForm = () => {
                   <Input
                     id="signupPassword"
                     type="password"
-                    placeholder="Create a password"
+                    placeholder="Create a password (min 6 characters)"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    disabled={loading}
+                    minLength={6}
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
@@ -177,12 +314,12 @@ export const AuthForm = () => {
           <div className="space-y-3">
             <Button
               variant="outline"
-              onClick={signInWithGoogle}
+              onClick={handleGoogleSignIn}
               className="w-full"
               disabled={loading}
             >
               <Chrome className="w-4 h-4 mr-2" />
-              Google
+              {loading ? 'Connecting...' : 'Google'}
             </Button>
 
             <Tabs defaultValue="phone" className="w-full">
@@ -194,28 +331,50 @@ export const AuthForm = () => {
               </TabsList>
               <TabsContent value="phone" className="mt-3">
                 <form onSubmit={handlePhoneAuth} className="space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+1234567890"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-                  {isOtpSent && (
+                  {!isOtpSent ? (
                     <div className="space-y-2">
-                      <Label htmlFor="otp">Enter OTP</Label>
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+1234567890 or 1234567890"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                        disabled={loading}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Enter with country code (e.g., +1 for US) or we'll add +1 automatically
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Label htmlFor="otp">Enter 6-digit OTP</Label>
                       <Input
                         id="otp"
                         type="text"
                         placeholder="123456"
                         value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
+                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         required
+                        disabled={loading}
+                        maxLength={6}
                       />
+                      <p className="text-xs text-muted-foreground">
+                        OTP sent to {phone}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="link"
+                        onClick={() => {
+                          setIsOtpSent(false);
+                          setOtp('');
+                        }}
+                        className="text-xs p-0 h-auto"
+                        disabled={loading}
+                      >
+                        Change phone number
+                      </Button>
                     </div>
                   )}
                   <Button type="submit" variant="outline" className="w-full" disabled={loading}>

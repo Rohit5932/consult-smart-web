@@ -1,6 +1,6 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, AuthError } from '@supabase/supabase-js';
+import { User, AuthError, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -14,6 +14,7 @@ interface Profile {
 
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   profile: Profile | null;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signUp: (email: string, password: string, fullName?: string) => Promise<{ error: AuthError | null }>;
@@ -42,6 +43,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -67,24 +69,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id).then(setProfile);
-      }
-      setLoading(false);
-    });
-
-    // Listen for auth changes
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session?.user?.id);
+      setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        const userProfile = await fetchProfile(session.user.id);
-        setProfile(userProfile);
+        // Use setTimeout to avoid potential deadlocks
+        setTimeout(async () => {
+          const userProfile = await fetchProfile(session.user.id);
+          setProfile(userProfile);
+        }, 0);
       } else {
         setProfile(null);
+      }
+      
+      setLoading(false);
+    });
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session?.user?.id);
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        fetchProfile(session.user.id).then(setProfile);
       }
       
       setLoading(false);
@@ -94,156 +105,244 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
+      if (error) {
+        console.error('Sign in error:', error);
+        toast({
+          title: "Sign In Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Signed in successfully!",
+        });
+      }
+
+      return { error };
+    } catch (error) {
+      console.error('Sign in exception:', error);
+      const authError = error as AuthError;
       toast({
         title: "Sign In Failed",
-        description: error.message,
+        description: authError.message || "An unexpected error occurred",
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Signed in successfully!",
-      });
+      return { error: authError };
     }
-
-    return { error };
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    });
+      });
 
-    if (error) {
+      if (error) {
+        console.error('Sign up error:', error);
+        toast({
+          title: "Sign Up Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Please check your email to confirm your account!",
+        });
+      }
+
+      return { error };
+    } catch (error) {
+      console.error('Sign up exception:', error);
+      const authError = error as AuthError;
       toast({
         title: "Sign Up Failed",
-        description: error.message,
+        description: authError.message || "An unexpected error occurred",
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Please check your email to confirm your account!",
-      });
+      return { error: authError };
     }
-
-    return { error };
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Sign out error:', error);
+        toast({
+          title: "Sign Out Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Signed out successfully!",
+        });
+      }
+    } catch (error) {
+      console.error('Sign out exception:', error);
       toast({
         title: "Sign Out Failed",
-        description: error.message,
+        description: "An unexpected error occurred",
         variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: "Signed out successfully!",
       });
     }
   };
 
   const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-      },
-    });
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
 
-    if (error) {
+      if (error) {
+        console.error('Google sign in error:', error);
+        toast({
+          title: "Google Sign In Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Google sign in exception:', error);
       toast({
         title: "Google Sign In Failed",
-        description: error.message,
+        description: "An unexpected error occurred",
         variant: "destructive",
       });
     }
   };
 
   const signInWithOTP = async (phone: string) => {
-    const { error } = await supabase.auth.signInWithOtp({
-      phone,
-    });
+    try {
+      // Ensure phone number has proper format
+      const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
+      
+      const { error } = await supabase.auth.signInWithOtp({
+        phone: formattedPhone,
+      });
 
-    if (error) {
+      if (error) {
+        console.error('OTP send error:', error);
+        toast({
+          title: "OTP Send Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "OTP sent to your phone!",
+        });
+      }
+
+      return { error };
+    } catch (error) {
+      console.error('OTP send exception:', error);
+      const authError = error as AuthError;
       toast({
         title: "OTP Send Failed",
-        description: error.message,
+        description: authError.message || "An unexpected error occurred",
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "OTP sent to your phone!",
-      });
+      return { error: authError };
     }
-
-    return { error };
   };
 
   const verifyOTP = async (phone: string, token: string) => {
-    const { error } = await supabase.auth.verifyOtp({
-      phone,
-      token,
-      type: 'sms',
-    });
+    try {
+      // Ensure phone number has proper format
+      const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
+      
+      const { error } = await supabase.auth.verifyOtp({
+        phone: formattedPhone,
+        token,
+        type: 'sms',
+      });
 
-    if (error) {
+      if (error) {
+        console.error('OTP verification error:', error);
+        toast({
+          title: "OTP Verification Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Phone verified successfully!",
+        });
+      }
+
+      return { error };
+    } catch (error) {
+      console.error('OTP verification exception:', error);
+      const authError = error as AuthError;
       toast({
         title: "OTP Verification Failed",
-        description: error.message,
+        description: authError.message || "An unexpected error occurred",
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Phone verified successfully!",
-      });
+      return { error: authError };
     }
-
-    return { error };
   };
 
   const resetPassword = async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
 
-    if (error) {
+      if (error) {
+        console.error('Password reset error:', error);
+        toast({
+          title: "Password Reset Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Password reset link sent to your email!",
+        });
+      }
+
+      return { error };
+    } catch (error) {
+      console.error('Password reset exception:', error);
+      const authError = error as AuthError;
       toast({
         title: "Password Reset Failed",
-        description: error.message,
+        description: authError.message || "An unexpected error occurred",
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Password reset link sent to your email!",
-      });
+      return { error: authError };
     }
-
-    return { error };
   };
 
   const isAdmin = profile?.role === 'admin';
 
   const value = {
     user,
+    session,
     profile,
     signIn,
     signUp,
