@@ -12,6 +12,8 @@ import CountdownTimer from "@/components/CountdownTimer";
 const AdminDashboard = () => {
   const { user, profile, signOut } = useAuth();
 
+  console.log('AdminDashboard - User:', user?.id, 'Profile:', profile);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}

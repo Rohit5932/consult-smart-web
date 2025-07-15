@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, AuthError, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,6 +49,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const fetchProfile = async (userId: string) => {
     try {
+      console.log('Fetching profile for user:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return null;
       }
 
+      console.log('Profile fetched:', data);
       return data;
     } catch (error) {
       console.error('Profile fetch error:', error);
@@ -76,11 +77,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        // Use setTimeout to avoid potential deadlocks
-        setTimeout(async () => {
-          const userProfile = await fetchProfile(session.user.id);
-          setProfile(userProfile);
-        }, 0);
+        // Fetch profile immediately when user is available
+        const userProfile = await fetchProfile(session.user.id);
+        setProfile(userProfile);
       } else {
         setProfile(null);
       }
@@ -89,13 +88,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     });
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       console.log('Initial session:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        fetchProfile(session.user.id).then(setProfile);
+        const userProfile = await fetchProfile(session.user.id);
+        setProfile(userProfile);
       }
       
       setLoading(false);
