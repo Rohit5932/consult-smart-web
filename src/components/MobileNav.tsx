@@ -1,65 +1,138 @@
 
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Home, Briefcase, User, Phone, BookOpen, Bell, LayoutDashboard } from "lucide-react";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { User, LogOut, Shield } from "lucide-react";
 
-const navigationItems = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "Services", href: "/services", icon: Briefcase },
-  { name: "About", href: "/about", icon: User },
-  { name: "Contact", href: "/contact", icon: Phone },
-  { name: "Blog", href: "/blog", icon: BookOpen },
-  { name: "Updates", href: "/updates", icon: Bell },
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-];
+interface MobileNavProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-export function MobileNav() {
-  const [open, setOpen] = useState(false);
-  const location = useLocation();
+const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
+  const { user, profile, signOut } = useAuth();
+
+  if (!isOpen) return null;
+
+  const handleSignOut = () => {
+    signOut();
+    onClose();
+  };
 
   return (
     <div className="md:hidden">
-      <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-9 w-9">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle menu</span>
-          </Button>
-        </DrawerTrigger>
-        <DrawerContent className="h-[80vh]">
-          <DrawerHeader className="text-left">
-            <DrawerTitle>Navigation Menu</DrawerTitle>
-          </DrawerHeader>
-          <nav className="flex flex-col space-y-1 px-4 pb-6">
-            {navigationItems.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
+      <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+        <Link
+          to="/"
+          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+          onClick={onClose}
+        >
+          Home
+        </Link>
+        <Link
+          to="/services"
+          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+          onClick={onClose}
+        >
+          Services
+        </Link>
+        <Link
+          to="/about"
+          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+          onClick={onClose}
+        >
+          About
+        </Link>
+        <Link
+          to="/contact"
+          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+          onClick={onClose}
+        >
+          Contact
+        </Link>
+        <Link
+          to="/blog"
+          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+          onClick={onClose}
+        >
+          Blog
+        </Link>
+        <Link
+          to="/updates"
+          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+          onClick={onClose}
+        >
+          Updates
+        </Link>
+        {user && (
+          <Link
+            to="/dashboard"
+            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+            onClick={onClose}
+          >
+            Dashboard
+          </Link>
+        )}
+
+        {/* Auth Section */}
+        <div className="pt-4 border-t">
+          {user ? (
+            <div className="space-y-3">
+              <div className="px-3 py-2">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Badge variant="secondary">
+                    <User className="w-3 h-3 mr-1" />
+                    {profile?.full_name || user.email}
+                  </Badge>
+                  {profile?.role === 'admin' && (
+                    <Badge variant="destructive">
+                      <Shield className="w-3 h-3 mr-1" />
+                      Admin
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              <Link
+                to="/user-dashboard"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                onClick={onClose}
+              >
+                <User className="w-4 h-4 mr-2 inline" />
+                My Data
+              </Link>
+              {profile?.role === 'admin' && (
                 <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setOpen(false)}
-                  className={`flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                    isActive
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground"
-                  }`}
+                  to="/admin"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={onClose}
                 >
-                  <item.icon className="h-5 w-5" />
-                  <span>{item.name}</span>
+                  <Shield className="w-4 h-4 mr-2 inline" />
+                  Admin Panel
                 </Link>
-              );
-            })}
-          </nav>
-        </DrawerContent>
-      </Drawer>
+              )}
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={handleSignOut}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
+          ) : (
+            <div className="px-3 py-2">
+              <Button asChild className="w-full">
+                <Link to="/auth" onClick={onClose}>
+                  Sign In
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default MobileNav;

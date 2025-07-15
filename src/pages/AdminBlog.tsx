@@ -1,9 +1,11 @@
+
 import { useState } from "react";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { LogOut } from "lucide-react";
 import BlogEditor from "@/components/BlogEditor";
 
 interface BlogPost {
@@ -18,7 +20,7 @@ interface BlogPost {
 }
 
 const AdminBlog = () => {
-  const { isSignedIn } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const [showEditor, setShowEditor] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | undefined>();
   const [posts, setPosts] = useState<BlogPost[]>([
@@ -33,10 +35,6 @@ const AdminBlog = () => {
       published: true
     }
   ]);
-
-  if (!isSignedIn) {
-    return <div className="flex items-center justify-center min-h-screen">Please sign in to access admin panel.</div>;
-  }
 
   const handleSavePost = (post: Partial<BlogPost>) => {
     if (editingPost) {
@@ -79,13 +77,21 @@ const AdminBlog = () => {
         <div className="container mx-auto px-4 py-4">
           <nav className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">TaxConsult Pro</h1>
-            <div className="space-x-4">
+            <div className="flex items-center space-x-4">
+              <Link to="/admin" className="hover:text-primary">Dashboard</Link>
               <Link to="/" className="hover:text-primary">Home</Link>
               <Link to="/services" className="hover:text-primary">Services</Link>
               <Link to="/about" className="hover:text-primary">About</Link>
               <Link to="/contact" className="hover:text-primary">Contact</Link>
               <Link to="/blog" className="hover:text-primary font-semibold">Blog</Link>
               <Link to="/updates" className="hover:text-primary">Updates</Link>
+              <span className="text-sm text-muted-foreground">
+                {profile?.full_name || user?.email}
+              </span>
+              <Button variant="outline" size="sm" onClick={signOut}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
             </div>
           </nav>
         </div>
