@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Home, Briefcase, User, Phone, BookOpen, Bell } from "lucide-react";
+import { Menu, X, Home, Briefcase, User, Phone, BookOpen, Bell, LayoutDashboard } from "lucide-react";
 import {
   Drawer,
   DrawerContent,
@@ -18,6 +18,7 @@ const navigationItems = [
   { name: "Contact", href: "/contact", icon: Phone },
   { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Updates", href: "/updates", icon: Bell },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
 ];
 
 export function MobileNav() {

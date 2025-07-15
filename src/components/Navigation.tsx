@@ -9,6 +9,7 @@ const navigationItems = [
   { name: "Contact", href: "/contact" },
   { name: "Blog", href: "/blog" },
   { name: "Updates", href: "/updates" },
+  { name: "Dashboard", href: "/dashboard" },
 ];
 
 export function Navigation() {
