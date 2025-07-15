@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -64,21 +65,13 @@ const AdminPanel = () => {
 
   const fetchUserData = async () => {
     try {
-      const { data, error } = await supabase
+      // First fetch user_data
+      const { data: userDataRows, error: userDataError } = await supabase
         .from('user_data')
-        .select(`
-          *,
-          profiles!user_data_user_id_fkey (
-            id,
-            email,
-            full_name,
-            role,
-            created_at
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) {
+      if (userDataError) {
         toast({
           title: "Error",
           description: "Failed to fetch user data",
@@ -87,7 +80,36 @@ const AdminPanel = () => {
         return;
       }
 
-      setUserData(data || []);
+      // Then fetch profiles
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('*');
+
+      if (profilesError) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch profiles for user data",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Manually join the data
+      const joinedData: UserDataWithProfile[] = userDataRows?.map(userDataRow => {
+        const matchingProfile = profilesData?.find(profile => profile.id === userDataRow.user_id);
+        return {
+          ...userDataRow,
+          profiles: matchingProfile || {
+            id: userDataRow.user_id,
+            email: null,
+            full_name: null,
+            role: 'user' as const,
+            created_at: new Date().toISOString()
+          }
+        };
+      }) || [];
+
+      setUserData(joinedData);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
