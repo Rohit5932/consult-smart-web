@@ -47,6 +47,7 @@ const AdminPanel = () => {
         .order('created_at', { ascending: false });
 
       if (error) {
+        console.error('Error fetching profiles:', error);
         toast({
           title: "Error",
           description: "Failed to fetch user profiles",
@@ -55,21 +56,32 @@ const AdminPanel = () => {
         return;
       }
 
+      console.log('Profiles fetched:', data);
       setProfiles(data || []);
     } catch (error) {
-      console.error('Error fetching profiles:', error);
+      console.error('Error in fetchProfiles:', error);
     }
   };
 
   const fetchUserData = async () => {
     try {
-      // First fetch user_data
-      const { data: userDataRows, error: userDataError } = await supabase
+      // Use Supabase's built-in join syntax
+      const { data, error } = await supabase
         .from('user_data')
-        .select('*')
+        .select(`
+          *,
+          profiles!inner(
+            id,
+            email,
+            full_name,
+            role,
+            created_at
+          )
+        `)
         .order('created_at', { ascending: false });
 
-      if (userDataError) {
+      if (error) {
+        console.error('Error fetching user data:', error);
         toast({
           title: "Error",
           description: "Failed to fetch user data",
@@ -78,46 +90,20 @@ const AdminPanel = () => {
         return;
       }
 
-      // Then fetch profiles
-      const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('*');
-
-      if (profilesError) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch profiles for user data",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Manually join the data
-      const joinedData: UserDataWithProfile[] = userDataRows?.map(userDataRow => {
-        const matchingProfile = profilesData?.find(profile => profile.id === userDataRow.user_id);
-        return {
-          ...userDataRow,
-          profiles: matchingProfile || {
-            id: userDataRow.user_id,
-            email: null,
-            full_name: null,
-            role: 'user' as const,
-            created_at: new Date().toISOString()
-          }
-        };
-      }) || [];
-
-      setUserData(joinedData);
+      console.log('User data fetched:', data);
+      setUserData(data || []);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error('Error in fetchUserData:', error);
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      console.log('Starting data fetch...');
       await Promise.all([fetchProfiles(), fetchUserData()]);
       setLoading(false);
+      console.log('Data fetch completed');
     };
 
     fetchData();
@@ -139,6 +125,7 @@ const AdminPanel = () => {
       
       fetchProfiles();
     } catch (error: any) {
+      console.error('Error updating role:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to update user role",
@@ -163,6 +150,7 @@ const AdminPanel = () => {
       
       fetchUserData();
     } catch (error: any) {
+      console.error('Error deleting data:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to delete user data",
