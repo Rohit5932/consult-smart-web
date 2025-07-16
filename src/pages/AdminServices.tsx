@@ -1,16 +1,13 @@
 
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
-import { LogOut } from "lucide-react";
 
 const AdminServices = () => {
-  const { user, profile, signOut } = useAuth();
   const [services, setServices] = useState([
     { id: 1, title: "GST Registration", description: "Complete GST registration process", icon: "📝" },
     { id: 2, title: "GST Filing", description: "Monthly and quarterly GST returns", icon: "📊" },
@@ -41,12 +38,8 @@ const AdminServices = () => {
               <Link to="/admin" className="hover:text-primary">Dashboard</Link>
               <Link to="/" className="hover:text-primary">Back to Site</Link>
               <span className="text-sm text-muted-foreground">
-                {profile?.full_name || user?.email}
+                Admin User
               </span>
-              <Button variant="outline" size="sm" onClick={signOut}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
             </div>
           </nav>
         </div>

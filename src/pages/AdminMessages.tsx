@@ -1,15 +1,12 @@
 
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link } from "react-router-dom";
-import { LogOut } from "lucide-react";
 
 const AdminMessages = () => {
-  const { user, profile, signOut } = useAuth();
   const [messages] = useState([
     {
       id: 1,
@@ -63,12 +60,8 @@ const AdminMessages = () => {
               <Link to="/admin" className="hover:text-primary">Dashboard</Link>
               <Link to="/" className="hover:text-primary">Back to Site</Link>
               <span className="text-sm text-muted-foreground">
-                {profile?.full_name || user?.email}
+                Admin User
               </span>
-              <Button variant="outline" size="sm" onClick={signOut}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
             </div>
           </nav>
         </div>

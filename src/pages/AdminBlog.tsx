@@ -1,11 +1,9 @@
 
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { LogOut } from "lucide-react";
 import BlogEditor from "@/components/BlogEditor";
 
 interface BlogPost {
@@ -20,7 +18,6 @@ interface BlogPost {
 }
 
 const AdminBlog = () => {
-  const { user, profile, signOut } = useAuth();
   const [showEditor, setShowEditor] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | undefined>();
   const [posts, setPosts] = useState<BlogPost[]>([
@@ -86,12 +83,8 @@ const AdminBlog = () => {
               <Link to="/blog" className="hover:text-primary font-semibold">Blog</Link>
               <Link to="/updates" className="hover:text-primary">Updates</Link>
               <span className="text-sm text-muted-foreground">
-                {profile?.full_name || user?.email}
+                Admin User
               </span>
-              <Button variant="outline" size="sm" onClick={signOut}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
             </div>
           </nav>
         </div>

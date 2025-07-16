@@ -1,5 +1,4 @@
 
-import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,10 +9,6 @@ import AdminServiceTracker from "@/components/AdminServiceTracker";
 import CountdownTimer from "@/components/CountdownTimer";
 
 const AdminDashboard = () => {
-  const { user, profile, signOut } = useAuth();
-
-  console.log('AdminDashboard - User:', user?.id, 'Profile:', profile);
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -24,12 +19,8 @@ const AdminDashboard = () => {
             <div className="flex items-center space-x-4">
               <Link to="/" className="hover:text-primary">Back to Site</Link>
               <span className="text-sm text-muted-foreground">
-                {profile?.full_name || user?.email}
+                Admin User
               </span>
-              <Button variant="outline" size="sm" onClick={signOut}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
             </div>
           </nav>
         </div>
