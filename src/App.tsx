@@ -87,32 +87,12 @@ const App = () => (
                 </ProtectedRoute>
               } />
               
-              {/* Admin Routes */}
-              <Route path="/admin" element={
-                <ProtectedRoute requireAdmin>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/panel" element={
-                <ProtectedRoute requireAdmin>
-                  <AdminPanel />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/services" element={
-                <ProtectedRoute requireAdmin>
-                  <AdminServices />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/blog" element={
-                <ProtectedRoute requireAdmin>
-                  <AdminBlog />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/messages" element={
-                <ProtectedRoute requireAdmin>
-                  <AdminMessages />
-                </ProtectedRoute>
-              } />
+              {/* Admin Routes - No Authentication Required */}
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/panel" element={<AdminPanel />} />
+              <Route path="/admin/services" element={<AdminServices />} />
+              <Route path="/admin/blog" element={<AdminBlog />} />
+              <Route path="/admin/messages" element={<AdminMessages />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
