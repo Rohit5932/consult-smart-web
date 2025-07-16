@@ -82,9 +82,6 @@ const AdminBlog = () => {
               <Link to="/contact" className="hover:text-primary">Contact</Link>
               <Link to="/blog" className="hover:text-primary font-semibold">Blog</Link>
               <Link to="/updates" className="hover:text-primary">Updates</Link>
-              <span className="text-sm text-muted-foreground">
-                Admin User
-              </span>
             </div>
           </nav>
         </div>

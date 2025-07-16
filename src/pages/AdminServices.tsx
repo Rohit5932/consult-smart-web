@@ -37,9 +37,6 @@ const AdminServices = () => {
             <div className="flex items-center space-x-4">
               <Link to="/admin" className="hover:text-primary">Dashboard</Link>
               <Link to="/" className="hover:text-primary">Back to Site</Link>
-              <span className="text-sm text-muted-foreground">
-                Admin User
-              </span>
             </div>
           </nav>
         </div>

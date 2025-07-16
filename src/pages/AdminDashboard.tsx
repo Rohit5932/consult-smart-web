@@ -18,9 +18,6 @@ const AdminDashboard = () => {
             <h1 className="text-2xl font-bold">TaxConsult Pro - Admin</h1>
             <div className="flex items-center space-x-4">
               <Link to="/" className="hover:text-primary">Back to Site</Link>
-              <span className="text-sm text-muted-foreground">
-                Admin User
-              </span>
             </div>
           </nav>
         </div>
