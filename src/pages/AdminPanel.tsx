@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,7 +31,6 @@ interface UserDataWithProfile {
 }
 
 const AdminPanel = () => {
-  const { user, profile, signOut } = useAuth();
   const { toast } = useToast();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [userData, setUserData] = useState<UserDataWithProfile[]>([]);
@@ -231,11 +229,11 @@ const AdminPanel = () => {
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-muted-foreground">
-                  {profile?.full_name || user?.email}
+                  Admin User
                 </span>
-                <Button variant="outline" size="sm" onClick={signOut}>
+                <Button variant="outline" size="sm" onClick={() => window.location.href = '/'}>
                   <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
+                  Back to Site
                 </Button>
               </div>
             </div>
