@@ -65,12 +65,12 @@ const AdminPanel = () => {
 
   const fetchUserData = async () => {
     try {
-      // Use Supabase's built-in join syntax
+      // Now that we have the proper foreign key relationship, this should work
       const { data, error } = await supabase
         .from('user_data')
         .select(`
           *,
-          profiles!inner(
+          profiles (
             id,
             email,
             full_name,
