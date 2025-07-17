@@ -18,6 +18,7 @@ export const AuthForm = () => {
   const [otp, setOtp] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const { signIn, signUp, signInWithGoogle, signInWithOTP, verifyOTP, resetPassword } = useAuth();
   const { toast } = useToast();
@@ -178,12 +179,13 @@ export const AuthForm = () => {
   };
 
   const handleGoogleSignIn = async () => {
-    setLoading(true);
+    setGoogleLoading(true);
     try {
       await signInWithGoogle();
-    } finally {
-      // Don't set loading to false immediately for OAuth as it redirects
-      setTimeout(() => setLoading(false), 2000);
+      // Don't set loading to false immediately for OAuth as it might redirect
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      setGoogleLoading(false);
     }
   };
 
@@ -316,10 +318,10 @@ export const AuthForm = () => {
               variant="outline"
               onClick={handleGoogleSignIn}
               className="w-full"
-              disabled={loading}
+              disabled={loading || googleLoading}
             >
               <Chrome className="w-4 h-4 mr-2" />
-              {loading ? 'Connecting...' : 'Google'}
+              {googleLoading ? 'Connecting to Google...' : 'Continue with Google'}
             </Button>
 
             <Tabs defaultValue="phone" className="w-full">

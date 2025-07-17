@@ -1,4 +1,3 @@
-
 import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { User, AuthError, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -205,28 +204,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInWithGoogle = async () => {
     try {
-      setLoading(true);
-      const redirectUrl = `${window.location.origin}/`;
-      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
+          redirectTo: window.location.origin + '/dashboard',
         },
       });
 
       if (error) {
+        console.error('Google OAuth error:', error);
         toast({
           title: "Google Sign In Failed",
           description: error.message,
           variant: "destructive",
         });
-        setLoading(false);
       }
-      // Don't set loading to false here as OAuth will redirect
+      // Note: Don't set loading to false here as OAuth will redirect
     } catch (error) {
       console.error('Google sign in error:', error);
-      setLoading(false);
+      toast({
+        title: "Google Sign In Failed",
+        description: "An unexpected error occurred during Google sign in",
+        variant: "destructive",
+      });
     }
   };
 
