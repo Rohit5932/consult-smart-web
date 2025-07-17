@@ -44,16 +44,18 @@ const Payment = () => {
   const handlePayment = async () => {
     setIsProcessing(true);
     
-    // Simulate payment processing
+    // Instead of simulating payment, redirect to payment completion page
     setTimeout(() => {
-      toast({
-        title: "Payment Successful!",
-        description: "Your service request has been submitted and payment completed.",
+      navigate('/payment-complete', { 
+        state: { 
+          serviceType, 
+          formData, 
+          uploadedFiles,
+          totalAmount: pricing?.price
+        } 
       });
-      
       setIsProcessing(false);
-      navigate('/dashboard');
-    }, 2000);
+    }, 1000);
   };
 
   if (!serviceType || !formData) {
@@ -150,7 +152,7 @@ const Payment = () => {
                   Payment Information
                 </CardTitle>
                 <CardDescription>
-                  Secure payment processing for your service
+                  Proceed to complete your payment
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -160,7 +162,7 @@ const Payment = () => {
                     <span className="font-medium text-green-800">Secure Payment</span>
                   </div>
                   <p className="text-sm text-green-700">
-                    Your payment is processed securely using industry-standard encryption.
+                    Your payment details are processed securely. Multiple payment options available.
                   </p>
                 </div>
 
@@ -182,12 +184,22 @@ const Payment = () => {
                 </div>
 
                 <div className="space-y-4">
+                  <h4 className="font-medium">Available Payment Methods:</h4>
+                  <div className="text-sm text-gray-600 space-y-2">
+                    <p>✓ UPI Payment (PhonePe, Paytm, GPay)</p>
+                    <p>✓ Bank Transfer (NEFT/RTGS)</p>
+                    <p>✓ Net Banking</p>
+                    <p>✓ Credit/Debit Card</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
                   <h4 className="font-medium">What happens next?</h4>
                   <div className="text-sm text-gray-600 space-y-2">
-                    <p>✓ Your request will be assigned to our expert team</p>
-                    <p>✓ We'll review your documents within 2 hours</p>
-                    <p>✓ You'll receive regular updates on progress</p>
-                    <p>✓ Get your service completed within the promised timeline</p>
+                    <p>✓ Choose your preferred payment method</p>
+                    <p>✓ Complete the payment using QR code or bank details</p>
+                    <p>✓ Submit payment confirmation details</p>
+                    <p>✓ Get verification within 24 hours</p>
                   </div>
                 </div>
 
@@ -196,11 +208,11 @@ const Payment = () => {
                   disabled={isProcessing}
                   className="w-full py-6 text-lg rounded-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-300"
                 >
-                  {isProcessing ? "Processing..." : `Pay ${pricing?.price} Now`}
+                  {isProcessing ? "Redirecting..." : `Proceed to Pay ${pricing?.price}`}
                 </Button>
 
                 <p className="text-xs text-gray-500 text-center">
-                  By proceeding with payment, you agree to our terms of service and privacy policy.
+                  You will be redirected to the payment page where you can choose your preferred payment method.
                 </p>
               </CardContent>
             </Card>

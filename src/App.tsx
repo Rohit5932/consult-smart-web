@@ -4,104 +4,119 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/contexts/AuthContext";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
-import GoogleCalendarScript from "@/components/GoogleCalendarScript";
 import Index from "./pages/Index";
-import Services from "./pages/Services";
-import ServiceDetail from "./pages/ServiceDetail";
 import About from "./pages/About";
+import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import ArticleDetail from "./pages/ArticleDetail";
 import Updates from "./pages/Updates";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
+import UserDashboard from "./pages/UserDashboard";
+import AdminPanel from "./pages/AdminPanel";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminServices from "./pages/AdminServices";
 import AdminBlog from "./pages/AdminBlog";
 import AdminMessages from "./pages/AdminMessages";
-import NotFound from "./pages/NotFound";
-import Dashboard from "./pages/Dashboard";
+import ServiceDetail from "./pages/ServiceDetail";
 import ServiceForm from "./pages/ServiceForm";
 import Payment from "./pages/Payment";
+import PaymentComplete from "./pages/PaymentComplete";
 import BookAppointment from "./pages/BookAppointment";
 import UploadDocuments from "./pages/UploadDocuments";
-import Auth from "./pages/Auth";
-import UserDashboard from "./pages/UserDashboard";
-import AdminPanel from "./pages/AdminPanel";
-import AIChatbot from "./components/AIChatbot";
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <HelmetProvider>
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
           <Toaster />
           <Sonner />
-          <GoogleAnalytics measurementId="GA_MEASUREMENT_ID" />
-          <GoogleCalendarScript />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/service/:serviceId" element={<ServiceDetail />} />
               <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/services/:serviceType" element={<ServiceDetail />} />
+              <Route path="/service-form/:serviceType" element={<ServiceForm />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:articleId" element={<ArticleDetail />} />
+              <Route path="/blog/:id" element={<ArticleDetail />} />
               <Route path="/updates" element={<Updates />} />
-              
-              {/* Protected Routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/user-dashboard" element={
-                <ProtectedRoute>
-                  <UserDashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/service-form/:serviceType" element={
-                <ProtectedRoute>
-                  <ServiceForm />
-                </ProtectedRoute>
-              } />
-              <Route path="/payment" element={
-                <ProtectedRoute>
-                  <Payment />
-                </ProtectedRoute>
-              } />
-              <Route path="/book-appointment" element={
-                <ProtectedRoute>
-                  <BookAppointment />
-                </ProtectedRoute>
-              } />
-              <Route path="/upload-documents" element={
-                <ProtectedRoute>
-                  <UploadDocuments />
-                </ProtectedRoute>
-              } />
-              
-              {/* Admin Routes - No Authentication Required */}
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/panel" element={<AdminPanel />} />
-              <Route path="/admin/services" element={<AdminServices />} />
-              <Route path="/admin/blog" element={<AdminBlog />} />
-              <Route path="/admin/messages" element={<AdminMessages />} />
-              
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/book-appointment" element={<BookAppointment />} />
+              <Route path="/upload-documents" element={<UploadDocuments />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/payment-complete" element={<PaymentComplete />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/user-dashboard"
+                element={
+                  <ProtectedRoute>
+                    <UserDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminPanel />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/services"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminServices />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminBlog />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/messages"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminMessages />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
-            <AIChatbot />
           </BrowserRouter>
         </AuthProvider>
       </TooltipProvider>
-    </HelmetProvider>
-  </QueryClientProvider>
-);
+    </QueryClientProvider>
+  );
+}
 
 export default App;

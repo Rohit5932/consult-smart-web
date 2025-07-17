@@ -1,470 +1,199 @@
-
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { Shield, Users, Database, LogOut, Search, Edit, Trash2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import SEO from '@/components/SEO';
-
-interface Profile {
-  id: string;
-  email: string | null;
-  full_name: string | null;
-  role: 'user' | 'admin';
-  created_at: string;
-}
-
-interface UserDataWithProfile {
-  id: string;
-  title: string;
-  description: string | null;
-  data: any;
-  created_at: string;
-  user_id: string;
-  profiles: Profile;
-}
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Shell } from "@/components/Shell";
+import { useAuth } from "@/contexts/AuthContext";
+import { LogOut } from "lucide-react";
+import AdminServiceTracker from "@/components/AdminServiceTracker";
+import AdminDocumentTracker from "@/components/AdminDocumentTracker";
+import AdminPaymentTracker from "@/components/AdminPaymentTracker";
 
 const AdminPanel = () => {
-  const { toast } = useToast();
-  const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [userData, setUserData] = useState<UserDataWithProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'email' | 'created_at'>('created_at');
-  const [roleFilter, setRoleFilter] = useState<'all' | 'user' | 'admin'>('all');
-
-  const fetchProfiles = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching profiles:', error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch user profiles",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      console.log('Profiles fetched:', data);
-      setProfiles(data || []);
-    } catch (error) {
-      console.error('Error in fetchProfiles:', error);
-    }
-  };
-
-  const fetchUserData = async () => {
-    try {
-      // Now that we have the proper foreign key relationship, this should work
-      const { data, error } = await supabase
-        .from('user_data')
-        .select(`
-          *,
-          profiles (
-            id,
-            email,
-            full_name,
-            role,
-            created_at
-          )
-        `)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching user data:', error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch user data",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      console.log('User data fetched:', data);
-      setUserData(data || []);
-    } catch (error) {
-      console.error('Error in fetchUserData:', error);
-    }
-  };
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
+  const [userCount, setUserCount] = useState(0);
+  const [serviceRequestCount, setServiceRequestCount] = useState(0);
+  const [documentCount, setDocumentCount] = useState(0);
+  const [paymentCount, setPaymentCount] = useState(0);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      console.log('Starting data fetch...');
-      await Promise.all([fetchProfiles(), fetchUserData()]);
-      setLoading(false);
-      console.log('Data fetch completed');
-    };
+    // Load user count
+    const storedUsers = localStorage.getItem('users');
+    setUserCount(storedUsers ? JSON.parse(storedUsers).length : 0);
 
-    fetchData();
+    // Load service request count
+    const storedServiceRequests = localStorage.getItem('serviceRequests');
+    setServiceRequestCount(storedServiceRequests ? JSON.parse(storedServiceRequests).length : 0);
+
+    // Load document count
+    const storedDocuments = localStorage.getItem('documents');
+    setDocumentCount(storedDocuments ? JSON.parse(storedDocuments).length : 0);
+
+    // Load payment count
+    const storedPayments = localStorage.getItem('paymentRecords');
+    setPaymentCount(storedPayments ? JSON.parse(storedPayments).length : 0);
   }, []);
 
-  const handleRoleChange = async (userId: string, newRole: 'user' | 'admin') => {
+  const handleLogout = async () => {
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ role: newRole })
-        .eq('id', userId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: `User role updated to ${newRole}`,
-      });
-      
-      fetchProfiles();
-    } catch (error: any) {
-      console.error('Error updating role:', error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to update user role",
-        variant: "destructive",
-      });
+      await logout();
+      navigate('/auth');
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   };
-
-  const handleDeleteUserData = async (dataId: string) => {
-    try {
-      const { error } = await supabase
-        .from('user_data')
-        .delete()
-        .eq('id', dataId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "User data deleted successfully",
-      });
-      
-      fetchUserData();
-    } catch (error: any) {
-      console.error('Error deleting data:', error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to delete user data",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const filteredProfiles = profiles
-    .filter(profile => {
-      const matchesSearch = 
-        profile.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        profile.email?.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesRole = roleFilter === 'all' || profile.role === roleFilter;
-      return matchesSearch && matchesRole;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'name':
-          return (a.full_name || '').localeCompare(b.full_name || '');
-        case 'email':
-          return (a.email || '').localeCompare(b.email || '');
-        case 'created_at':
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-        default:
-          return 0;
-      }
-    });
-
-  const filteredUserData = userData.filter(data =>
-    data.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.profiles?.email?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   return (
-    <>
-      <SEO 
-        title="Admin Panel - TaxConsult Pro"
-        description="Admin panel for managing users and data in TaxConsult Pro."
-        keywords="admin panel, user management, admin dashboard"
-      />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-        {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-4">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
-                  TaxConsult Pro - Admin Panel
-                </h1>
-                <Badge variant="destructive">
-                  <Shield className="w-3 h-3 mr-1" />
-                  Admin
-                </Badge>
-              </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-muted-foreground">
-                  Admin User
-                </span>
-                <Button variant="outline" size="sm" onClick={() => window.location.href = '/'}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Back to Site
-                </Button>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <div className="container mx-auto px-4 py-8">
-          <div className="space-y-8">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{profiles.length}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {profiles.filter(p => p.role === 'admin').length} admins, {profiles.filter(p => p.role === 'user').length} users
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Data Entries</CardTitle>
-                  <Database className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{userData.length}</div>
-                  <p className="text-xs text-muted-foreground">
-                    Total user data entries
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Today</CardTitle>
-                  <Shield className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    {userData.filter(d => 
-                      new Date(d.created_at).toDateString() === new Date().toDateString()
-                    ).length}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    New entries today
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Search and Filters */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Search and Filters</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search users or data..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                  <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-                    <SelectTrigger className="w-full md:w-[180px]">
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="created_at">Date Created</SelectItem>
-                      <SelectItem value="name">Name</SelectItem>
-                      <SelectItem value="email">Email</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={roleFilter} onValueChange={(value: any) => setRoleFilter(value)}>
-                    <SelectTrigger className="w-full md:w-[150px]">
-                      <SelectValue placeholder="Filter by role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Roles</SelectItem>
-                      <SelectItem value="user">Users</SelectItem>
-                      <SelectItem value="admin">Admins</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Users Table */}
-            <Card>
-              <CardHeader>
-                <CardTitle>User Management</CardTitle>
-                <CardDescription>
-                  Manage user accounts and roles
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredProfiles.map((profile) => (
-                      <TableRow key={profile.id}>
-                        <TableCell className="font-medium">
-                          {profile.full_name || 'N/A'}
-                        </TableCell>
-                        <TableCell>{profile.email}</TableCell>
-                        <TableCell>
-                          <Badge variant={profile.role === 'admin' ? 'destructive' : 'secondary'}>
-                            {profile.role}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {new Date(profile.created_at).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          <Select
-                            value={profile.role}
-                            onValueChange={(value: 'user' | 'admin') => 
-                              handleRoleChange(profile.id, value)
-                            }
-                          >
-                            <SelectTrigger className="w-[100px]">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="user">User</SelectItem>
-                              <SelectItem value="admin">Admin</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-
-            {/* User Data Table */}
-            <Card>
-              <CardHeader>
-                <CardTitle>All User Data</CardTitle>
-                <CardDescription>
-                  View and manage all user data entries
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Title</TableHead>
-                      <TableHead>User</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredUserData.map((data) => (
-                      <TableRow key={data.id}>
-                        <TableCell className="font-medium">{data.title}</TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">
-                              {data.profiles?.full_name || 'N/A'}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {data.profiles?.email}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="max-w-xs truncate">
-                          {data.description || 'N/A'}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(data.created_at).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button size="sm" variant="outline">
-                                  <Edit className="w-3 h-3" />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="max-w-2xl">
-                                <DialogHeader>
-                                  <DialogTitle>View Data: {data.title}</DialogTitle>
-                                  <DialogDescription>
-                                    Data entry by {data.profiles?.full_name || data.profiles?.email}
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <div className="space-y-4">
-                                  <div>
-                                    <h4 className="font-medium mb-2">Description:</h4>
-                                    <p className="text-sm text-muted-foreground">
-                                      {data.description || 'No description'}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <h4 className="font-medium mb-2">Data:</h4>
-                                    <pre className="bg-muted p-3 rounded-md text-xs overflow-auto">
-                                      {JSON.stringify(data.data, null, 2)}
-                                    </pre>
-                                  </div>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleDeleteUserData(data.id)}
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+      {/* Header */}
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
+              Admin Panel
+            </h1>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
           </div>
         </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="bg-blue-50 shadow-md">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">Total Users</CardTitle>
+                <CardDescription>Registered users on the platform</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-blue-700">{userCount}</div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-green-50 shadow-md">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">Service Requests</CardTitle>
+                <CardDescription>New service requests received</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-green-700">{serviceRequestCount}</div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-orange-50 shadow-md">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">Documents Uploaded</CardTitle>
+                <CardDescription>Total documents uploaded by clients</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-orange-700">{documentCount}</div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-purple-50 shadow-md">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">Payments Received</CardTitle>
+                <CardDescription>Total payments submitted by clients</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-purple-700">{paymentCount}</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Tabs defaultValue="services" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="services">Service Requests</TabsTrigger>
+              <TabsTrigger value="documents">Documents</TabsTrigger>
+              <TabsTrigger value="payments">Payments</TabsTrigger>
+              <TabsTrigger value="users">Users</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="services" className="space-y-6">
+              <AdminServiceTracker />
+            </TabsContent>
+
+            <TabsContent value="documents" className="space-y-6">
+              <AdminDocumentTracker />
+            </TabsContent>
+
+            <TabsContent value="payments" className="space-y-6">
+              <AdminPaymentTracker />
+            </TabsContent>
+
+            <TabsContent value="users" className="space-y-6">
+              {/* Users Management */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>User Management</CardTitle>
+                  <CardDescription>Manage registered users and their roles</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {user ? (
+                        <TableRow key={user.uid}>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Avatar>
+                                <AvatarImage src={`https://avatar.vercel.sh/${user.email}.png`} alt={user.email} />
+                                <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                              </Avatar>
+                              <span>{user.email}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>{user.email}</TableCell>
+                          <TableCell>
+                            <Badge variant="secondary">Admin</Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="outline" size="sm">
+                              View
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center">
+                            No users found.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
