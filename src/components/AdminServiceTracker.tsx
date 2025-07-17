@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -54,7 +53,22 @@ const AdminServiceTracker = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setRequests(data || []);
+      
+      // Type cast the data to ensure proper types
+      const typedData: ServiceRequest[] = (data || []).map(item => ({
+        id: item.id,
+        service_type: item.service_type,
+        name: item.name,
+        email: item.email,
+        phone: item.phone,
+        company: item.company || undefined,
+        urgency: item.urgency || 'normal',
+        message: item.message || undefined,
+        status: (item.status || 'pending') as "pending" | "processing" | "completed",
+        created_at: item.created_at
+      }));
+      
+      setRequests(typedData);
     } catch (error) {
       console.error('Error loading service requests:', error);
       toast({

@@ -37,7 +37,7 @@ const PaymentComplete = () => {
   // Bank details - you can customize these
   const bankDetails = {
     bankName: "State Bank of India",
-    accountName: "Your Business Name",
+    accountName: "Your Business Name", 
     accountNumber: "1234567890123",
     ifscCode: "SBIN0001234",
     branchName: "Main Branch",
@@ -101,6 +101,20 @@ const PaymentComplete = () => {
     setIsSubmitting(true);
 
     try {
+      // Prepare payment details without File object
+      const paymentDetailsForDB = {
+        paymentMethod: paymentData.paymentMethod,
+        transactionId: paymentData.transactionId,
+        paymentDate: paymentData.paymentDate,
+        paymentTime: paymentData.paymentTime,
+        paidAmount: paymentData.paidAmount,
+        payerName: paymentData.payerName,
+        payerEmail: paymentData.payerEmail,
+        payerPhone: paymentData.payerPhone,
+        paymentScreenshotName: paymentData.paymentScreenshot?.name || null,
+        additionalNotes: paymentData.additionalNotes
+      };
+
       const { error } = await supabase
         .from('payment_records')
         .insert({
@@ -108,7 +122,7 @@ const PaymentComplete = () => {
           service_type: serviceType,
           service_name: serviceName,
           client_data: formData,
-          payment_details: paymentData,
+          payment_details: paymentDetailsForDB,
           total_amount: pricing?.price || totalAmount,
           status: 'pending_verification',
           uploaded_files: uploadedFiles?.map((file: File) => file.name) || []

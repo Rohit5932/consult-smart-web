@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +50,19 @@ const AdminDocumentTracker = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setDocuments(data || []);
+      
+      // Type cast the data to ensure proper types
+      const typedData: DocumentData[] = (data || []).map(item => ({
+        id: item.id,
+        file_name: item.file_name,
+        file_size: item.file_size,
+        file_type: item.file_type,
+        status: (item.status || 'pending') as "pending" | "processing" | "completed",
+        upload_date: item.upload_date,
+        client_name: item.client_name
+      }));
+      
+      setDocuments(typedData);
     } catch (error) {
       console.error('Error loading documents:', error);
       toast({

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -54,7 +53,22 @@ const AdminAppointmentTracker = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setAppointments(data || []);
+      
+      // Type cast the data to ensure proper types
+      const typedData: AppointmentData[] = (data || []).map(item => ({
+        id: item.id,
+        name: item.name,
+        email: item.email,
+        phone: item.phone,
+        service: item.service,
+        date: item.date,
+        time: item.time,
+        message: item.message || '',
+        status: (item.status || 'scheduled') as "scheduled" | "completed" | "cancelled",
+        created_at: item.created_at
+      }));
+      
+      setAppointments(typedData);
     } catch (error) {
       console.error('Error loading appointments:', error);
       toast({
