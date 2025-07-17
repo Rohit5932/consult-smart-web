@@ -1,3 +1,4 @@
+
 import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { User, AuthError, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,6 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Fetch user profile from profiles table
   const fetchProfile = async (userId: string) => {
     try {
+      console.log('Fetching profile for user:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -61,6 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return null;
       }
 
+      console.log('Profile fetched successfully:', data);
       return data;
     } catch (error) {
       console.error('Error in fetchProfile:', error);
@@ -68,8 +71,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  // Clear any cached data
+  const clearAuthData = () => {
+    console.log('Clearing auth data');
+    setUser(null);
+    setSession(null);
+    setProfile(null);
+  };
+
   // Initialize auth state
   useEffect(() => {
+    console.log('Initializing auth state...');
+    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -81,8 +94,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (session?.user) {
           // Fetch profile data when user is authenticated
           setTimeout(async () => {
-            const profileData = await fetchProfile(session.user.id);
-            setProfile(profileData);
+            try {
+              const profileData = await fetchProfile(session.user.id);
+              setProfile(profileData);
+            } catch (error) {
+              console.error('Error fetching profile in auth state change:', error);
+            }
           }, 0);
         } else {
           setProfile(null);
@@ -93,38 +110,57 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting initial session:', error);
+        clearAuthData();
+        setLoading(false);
+        return;
+      }
+
+      console.log('Initial session:', session?.user?.id || 'No session');
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
         setTimeout(async () => {
-          const profileData = await fetchProfile(session.user.id);
-          setProfile(profileData);
+          try {
+            const profileData = await fetchProfile(session.user.id);
+            setProfile(profileData);
+          } catch (error) {
+            console.error('Error fetching profile in initial session:', error);
+          }
         }, 0);
       }
       
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      console.log('Cleaning up auth subscription');
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log('Attempting to sign in with email:', email);
       setLoading(true);
+      
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        console.error('Sign in error:', error);
         toast({
           title: "Sign In Failed",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log('Sign in successful');
         toast({
           title: "Welcome back!",
           description: "You have successfully signed in.",
@@ -142,6 +178,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     try {
+      console.log('Attempting to sign up with email:', email);
       setLoading(true);
       const redirectUrl = `${window.location.origin}/`;
       
@@ -157,12 +194,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (error) {
+        console.error('Sign up error:', error);
         toast({
           title: "Sign Up Failed",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log('Sign up successful');
         toast({
           title: "Check your email",
           description: "Please check your email for a confirmation link to complete your registration.",
@@ -180,16 +219,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = async () => {
     try {
+      console.log('Attempting to sign out');
       setLoading(true);
+      
+      // Clear local state first
+      clearAuthData();
+      
       const { error } = await supabase.auth.signOut();
       
       if (error) {
+        console.error('Sign out error:', error);
         toast({
           title: "Sign Out Failed",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log('Sign out successful');
         toast({
           title: "Signed out",
           description: "You have been successfully signed out.",
@@ -204,6 +250,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInWithGoogle = async () => {
     try {
+      console.log('Attempting Google sign in');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -232,18 +279,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInWithOTP = async (phone: string) => {
     try {
+      console.log('Attempting OTP sign in with phone:', phone);
       setLoading(true);
       const { error } = await supabase.auth.signInWithOtp({
         phone,
       });
 
       if (error) {
+        console.error('OTP error:', error);
         toast({
           title: "OTP Failed",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log('OTP sent successfully');
         toast({
           title: "OTP Sent",
           description: "Please check your phone for the verification code.",
@@ -261,6 +311,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const verifyOTP = async (phone: string, token: string) => {
     try {
+      console.log('Attempting OTP verification');
       setLoading(true);
       const { error } = await supabase.auth.verifyOtp({
         phone,
@@ -269,12 +320,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (error) {
+        console.error('OTP verification error:', error);
         toast({
           title: "Verification Failed",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log('OTP verification successful');
         toast({
           title: "Welcome!",
           description: "You have successfully signed in with phone verification.",
@@ -292,6 +345,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const resetPassword = async (email: string) => {
     try {
+      console.log('Attempting password reset for email:', email);
       setLoading(true);
       const redirectUrl = `${window.location.origin}/`;
       
@@ -300,12 +354,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (error) {
+        console.error('Password reset error:', error);
         toast({
           title: "Password Reset Failed",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log('Password reset email sent');
         toast({
           title: "Check your email",
           description: "We've sent you a link to reset your password.",

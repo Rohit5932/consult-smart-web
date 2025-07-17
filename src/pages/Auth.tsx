@@ -8,7 +8,12 @@ import SEO from '@/components/SEO';
 const Auth = () => {
   const { user, loading } = useAuth();
 
+  useEffect(() => {
+    console.log('Auth page - user:', user?.id || 'No user', 'loading:', loading);
+  }, [user, loading]);
+
   if (loading) {
+    console.log('Auth page - showing loading state');
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -17,9 +22,11 @@ const Auth = () => {
   }
 
   if (user) {
+    console.log('Auth page - user authenticated, redirecting to dashboard');
     return <Navigate to="/dashboard" replace />;
   }
 
+  console.log('Auth page - showing auth form');
   return (
     <>
       <SEO 
