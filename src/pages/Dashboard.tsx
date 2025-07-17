@@ -1,126 +1,199 @@
 
+import { useAuth } from "@/contexts/AuthContext";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import SEO from "@/components/SEO";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import GSTCalculator from "@/components/GSTCalculator";
-import SIPCalculator from "@/components/SIPCalculator";
-import EMICalculator from "@/components/EMICalculator";
-import ClientDashboard from "@/components/ClientDashboard";
-import ZoomIntegration from "@/components/ZoomIntegration";
-import CRMIntegration from "@/components/CRMIntegration";
-import AIChatbot from "@/components/AIChatbot";
+import { 
+  FileText, 
+  Calendar, 
+  CreditCard, 
+  Upload, 
+  Settings, 
+  User,
+  Shield,
+  BarChart3 
+} from "lucide-react";
+import Navigation from "@/components/Navigation";
+import AdminPromotion from "@/components/AdminPromotion";
 
 const Dashboard = () => {
-  const { t } = useTranslation();
+  const { user, profile, loading } = useAuth();
+
+  console.log('Dashboard - user:', user?.id, 'profile:', profile, 'loading:', loading);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
+        <Card>
+          <CardContent className="pt-6">
+            <p>Please sign in to access your dashboard.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      <SEO 
-        title="Dashboard - TaxConsult Pro"
-        description="Advanced tax consulting dashboard with GST calculator, client management, and AI assistance."
-        keywords="tax dashboard, GST calculator, client portal, tax tools"
-      />
+      <Navigation />
       
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 className="text-xl md:text-2xl font-bold text-center md:text-left bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
-              TaxConsult Pro - Dashboard
-            </h1>
-            <div className="flex items-center space-x-4">
-              <LanguageSwitcher />
-              <Link 
-                to="/" 
-                className="hover:text-primary text-sm md:text-base px-4 py-2 rounded-full bg-blue-100 hover:bg-blue-200 transition-colors"
-              >
-                Back to Home
-              </Link>
-            </div>
-          </nav>
-        </div>
-      </header>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Welcome Section */}
+          <Card className="bg-gradient-to-r from-blue-500 to-orange-500 text-white">
+            <CardHeader>
+              <CardTitle className="text-2xl md:text-3xl">
+                Welcome back, {profile?.full_name || 'User'}!
+              </CardTitle>
+              <CardDescription className="text-blue-100">
+                Manage your tax services and track your progress from your dashboard.
+              </CardDescription>
+            </CardHeader>
+          </Card>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-6 md:py-8">
-        <div className="grid gap-8 md:gap-10">
-          {/* Tools Section */}
-          <section className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-orange-600/5 rounded-3xl"></div>
-            <div className="relative p-6 md:p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
-                  Tax & Financial Calculators
-                </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Powerful tools to help you calculate GST, plan your investments, and manage loan EMIs
-                </p>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
-                <div className="flex justify-center">
-                  <GSTCalculator />
-                </div>
-                <div className="flex justify-center">
-                  <SIPCalculator />
-                </div>
-                <div className="flex justify-center">
-                  <EMICalculator />
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* Admin Promotion Card (only for non-admin users) */}
+          <AdminPromotion />
 
-          {/* Client Portal */}
-          <section className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 to-blue-600/5 rounded-3xl"></div>
-            <div className="relative p-6 md:p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                  Client Portal
-                </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Manage your appointments, documents, and access quick services
-                </p>
-              </div>
-              <ClientDashboard />
-            </div>
-          </section>
+          {/* Quick Actions Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Service Request */}
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <FileText className="h-8 w-8 text-blue-600" />
+                  <div>
+                    <CardTitle className="text-lg">Request Service</CardTitle>
+                    <CardDescription>Start a new tax service request</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full">
+                  <Link to="/services">Browse Services</Link>
+                </Button>
+              </CardContent>
+            </Card>
 
-          {/* Communication Tools */}
-          <section className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-pink-600/5 rounded-3xl"></div>
-            <div className="relative p-6 md:p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Communication & CRM
-                </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Connect with us through video calls and manage your client relationship
-                </p>
+            {/* Book Appointment */}
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-8 w-8 text-green-600" />
+                  <div>
+                    <CardTitle className="text-lg">Book Appointment</CardTitle>
+                    <CardDescription>Schedule a consultation</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full" variant="outline">
+                  <Link to="/book-appointment">Schedule Now</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Upload Documents */}
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <Upload className="h-8 w-8 text-orange-600" />
+                  <div>
+                    <CardTitle className="text-lg">Upload Documents</CardTitle>
+                    <CardDescription>Share your tax documents securely</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full" variant="outline">
+                  <Link to="/upload-documents">Upload Files</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* My Data */}
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <User className="h-8 w-8 text-purple-600" />
+                  <div>
+                    <CardTitle className="text-lg">My Data</CardTitle>
+                    <CardDescription>View your submissions and history</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full" variant="outline">
+                  <Link to="/user-dashboard">View Data</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Payment */}
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <CreditCard className="h-8 w-8 text-red-600" />
+                  <div>
+                    <CardTitle className="text-lg">Make Payment</CardTitle>
+                    <CardDescription>Pay for your services</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full" variant="outline">
+                  <Link to="/payment">Pay Now</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Admin Panel (only for admins) */}
+            {profile?.role === 'admin' && (
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer border-orange-200 bg-orange-50">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <Shield className="h-8 w-8 text-orange-600" />
+                    <div>
+                      <CardTitle className="text-lg text-orange-800">Admin Panel</CardTitle>
+                      <CardDescription className="text-orange-700">Manage users and services</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Button asChild className="w-full bg-orange-600 hover:bg-orange-700">
+                    <Link to="/admin">
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      Admin Dashboard
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Recent Activity */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>Your latest interactions with our services</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8 text-gray-500">
+                <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No recent activity to display.</p>
+                <p className="text-sm">Start by requesting a service or booking an appointment.</p>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                <ZoomIntegration />
-                <CRMIntegration />
-              </div>
-            </div>
-          </section>
+            </CardContent>
+          </Card>
         </div>
       </div>
-
-      {/* AI Chatbot */}
-      <AIChatbot />
-
-      {/* Footer */}
-      <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-8 md:py-12 mt-16">
-        <div className="container mx-auto px-4 text-center">
-          <div className="mb-4">
-            <h3 className="text-xl font-bold mb-2">TaxConsult Pro</h3>
-            <p className="text-gray-300">Your trusted partner in tax and financial consulting</p>
-          </div>
-          <p className="text-gray-400 text-sm md:text-base">{t('footer.copyright')}</p>
-        </div>
-      </footer>
     </div>
   );
 };
