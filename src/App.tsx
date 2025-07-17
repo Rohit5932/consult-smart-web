@@ -27,7 +27,7 @@ import PaymentComplete from "./pages/PaymentComplete";
 import BookAppointment from "./pages/BookAppointment";
 import UploadDocuments from "./pages/UploadDocuments";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -73,7 +73,7 @@ function App() {
               <Route
                 path="/admin"
                 element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requireAdmin={true}>
                     <AdminPanel />
                   </ProtectedRoute>
                 }
@@ -81,7 +81,7 @@ function App() {
               <Route
                 path="/admin/dashboard"
                 element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requireAdmin={true}>
                     <AdminDashboard />
                   </ProtectedRoute>
                 }
@@ -89,7 +89,7 @@ function App() {
               <Route
                 path="/admin/services"
                 element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requireAdmin={true}>
                     <AdminServices />
                   </ProtectedRoute>
                 }
@@ -97,7 +97,7 @@ function App() {
               <Route
                 path="/admin/blog"
                 element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requireAdmin={true}>
                     <AdminBlog />
                   </ProtectedRoute>
                 }
@@ -105,7 +105,7 @@ function App() {
               <Route
                 path="/admin/messages"
                 element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requireAdmin={true}>
                     <AdminMessages />
                   </ProtectedRoute>
                 }

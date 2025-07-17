@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +16,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Shell } from "@/components/Shell";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogOut } from "lucide-react";
 import AdminServiceTracker from "@/components/AdminServiceTracker";
@@ -24,7 +24,7 @@ import AdminPaymentTracker from "@/components/AdminPaymentTracker";
 
 const AdminPanel = () => {
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { signOut, user } = useAuth();
   const [userCount, setUserCount] = useState(0);
   const [serviceRequestCount, setServiceRequestCount] = useState(0);
   const [documentCount, setDocumentCount] = useState(0);
@@ -50,7 +50,7 @@ const AdminPanel = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       navigate('/auth');
     } catch (error) {
       console.error("Logout failed:", error);
@@ -158,7 +158,7 @@ const AdminPanel = () => {
                     </TableHeader>
                     <TableBody>
                       {user ? (
-                        <TableRow key={user.uid}>
+                        <TableRow key={user.id}>
                           <TableCell>
                             <div className="flex items-center space-x-2">
                               <Avatar>
