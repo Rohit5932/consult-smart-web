@@ -166,7 +166,7 @@ const Services = () => {
                 <Card 
                   key={service.id} 
                   className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-lg overflow-hidden"
-                  onClick={() => navigate(`/service/${service.id}`)}
+                  onClick={() => navigate(`/services/${service.id}`)}
                 >
                   <div className="h-2 bg-gradient-to-r from-primary to-primary/80" />
                   
@@ -201,7 +201,7 @@ const Services = () => {
                         className="flex-1 border-2 border-primary/20 hover:border-primary/40 text-primary font-semibold py-3 rounded-full transition-all duration-300"
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/service/${service.id}`);
+                          navigate(`/services/${service.id}`);
                         }}
                       >
                         Learn More
@@ -210,8 +210,7 @@ const Services = () => {
                         className="flex-1 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold py-3 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg"
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log('Navigating to:', `/service-form/${service.id}`);
-                          navigate(`/service-form/${service.id}`);
+                          navigate('/service-form', { state: { serviceType: service.id } });
                         }}
                       >
                         Apply Now

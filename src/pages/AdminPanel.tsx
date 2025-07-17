@@ -21,6 +21,8 @@ import { LogOut, ArrowLeft } from "lucide-react";
 import AdminServiceTracker from "@/components/AdminServiceTracker";
 import AdminDocumentTracker from "@/components/AdminDocumentTracker";
 import AdminPaymentTracker from "@/components/AdminPaymentTracker";
+import AdminAppointmentTracker from "@/components/AdminAppointmentTracker";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const AdminPanel = () => {
   const [serviceRequestCount, setServiceRequestCount] = useState(0);
   const [documentCount, setDocumentCount] = useState(0);
   const [paymentCount, setPaymentCount] = useState(0);
+  const [appointmentCount, setAppointmentCount] = useState(0);
 
   console.log('AdminPanel - user:', user?.id, 'profile:', profile);
 
@@ -40,22 +43,41 @@ const AdminPanel = () => {
       return;
     }
 
-    // Load counts from localStorage
-    const loadCounts = () => {
+    // Load counts from Supabase
+    const loadCounts = async () => {
       try {
-        const storedUsers = localStorage.getItem('users');
-        setUserCount(storedUsers ? JSON.parse(storedUsers).length : 0);
+        // Count profiles (users)
+        const { count: usersCount } = await supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true });
 
-        const storedServiceRequests = localStorage.getItem('serviceRequests');
-        setServiceRequestCount(storedServiceRequests ? JSON.parse(storedServiceRequests).length : 0);
+        // Count service requests
+        const { count: serviceRequestsCount } = await supabase
+          .from('service_requests')
+          .select('*', { count: 'exact', head: true });
 
-        const storedDocuments = localStorage.getItem('documents');
-        setDocumentCount(storedDocuments ? JSON.parse(storedDocuments).length : 0);
+        // Count documents
+        const { count: documentsCount } = await supabase
+          .from('documents')
+          .select('*', { count: 'exact', head: true });
 
-        const storedPayments = localStorage.getItem('paymentRecords');
-        setPaymentCount(storedPayments ? JSON.parse(storedPayments).length : 0);
+        // Count payments
+        const { count: paymentsCount } = await supabase
+          .from('payment_records')
+          .select('*', { count: 'exact', head: true });
+
+        // Count appointments
+        const { count: appointmentsCount } = await supabase
+          .from('appointments')
+          .select('*', { count: 'exact', head: true });
+
+        setUserCount(usersCount || 0);
+        setServiceRequestCount(serviceRequestsCount || 0);
+        setDocumentCount(documentsCount || 0);
+        setPaymentCount(paymentsCount || 0);
+        setAppointmentCount(appointmentsCount || 0);
       } catch (error) {
-        console.error('Error loading data from localStorage:', error);
+        console.error('Error loading data counts:', error);
       }
     };
 
@@ -143,7 +165,7 @@ const AdminPanel = () => {
           </Card>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <Card className="bg-blue-50 shadow-md">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold">Total Users</CardTitle>
@@ -166,7 +188,7 @@ const AdminPanel = () => {
 
             <Card className="bg-orange-50 shadow-md">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Documents Uploaded</CardTitle>
+                <CardTitle className="text-lg font-semibold">Documents</CardTitle>
                 <CardDescription>Total documents uploaded by clients</CardDescription>
               </CardHeader>
               <CardContent>
@@ -176,11 +198,21 @@ const AdminPanel = () => {
 
             <Card className="bg-purple-50 shadow-md">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Payments Received</CardTitle>
+                <CardTitle className="text-lg font-semibold">Payments</CardTitle>
                 <CardDescription>Total payments submitted by clients</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-purple-700">{paymentCount}</div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-teal-50 shadow-md">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">Appointments</CardTitle>
+                <CardDescription>Scheduled appointments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-teal-700">{appointmentCount}</div>
               </CardContent>
             </Card>
           </div>
@@ -188,13 +220,17 @@ const AdminPanel = () => {
           <Tabs defaultValue="services" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="services">Service Requests</TabsTrigger>
+              <TabsTrigger value="appointments">Appointments</TabsTrigger>
               <TabsTrigger value="documents">Documents</TabsTrigger>
               <TabsTrigger value="payments">Payments</TabsTrigger>
-              <TabsTrigger value="users">Users</TabsTrigger>
             </TabsList>
 
             <TabsContent value="services" className="space-y-6">
               <AdminServiceTracker />
+            </TabsContent>
+
+            <TabsContent value="appointments" className="space-y-6">
+              <AdminAppointmentTracker />
             </TabsContent>
 
             <TabsContent value="documents" className="space-y-6">
@@ -203,58 +239,6 @@ const AdminPanel = () => {
 
             <TabsContent value="payments" className="space-y-6">
               <AdminPaymentTracker />
-            </TabsContent>
-
-            <TabsContent value="users" className="space-y-6">
-              {/* Users Management */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>User Management</CardTitle>
-                  <CardDescription>Manage registered users and their roles</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {user ? (
-                        <TableRow key={user.id}>
-                          <TableCell>
-                            <div className="flex items-center space-x-2">
-                              <Avatar>
-                                <AvatarImage src={`https://avatar.vercel.sh/${user.email}.png`} alt={user.email || 'User'} />
-                                <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
-                              </Avatar>
-                              <span>{profile.full_name || user.email}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>
-                            <Badge variant="default">Admin</Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="outline" size="sm">
-                              View
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={4} className="text-center">
-                            No users found.
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
             </TabsContent>
           </Tabs>
         </div>

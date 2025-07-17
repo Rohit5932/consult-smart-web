@@ -44,6 +44,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
               <Route path="/services/:serviceType" element={<ServiceDetail />} />
+              <Route path="/service-form" element={<ServiceForm />} />
               <Route path="/service-form/:serviceType" element={<ServiceForm />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/blog" element={<Blog />} />

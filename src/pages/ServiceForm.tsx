@@ -17,8 +17,9 @@ const ServiceForm = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   
+  // Get serviceType from location state or URL params
   const { serviceType } = location.state || {};
-
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -58,6 +59,7 @@ const ServiceForm = () => {
         description: "Please log in to submit a service request.",
         variant: "destructive"
       });
+      navigate('/auth');
       return;
     }
 
