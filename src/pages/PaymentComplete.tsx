@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,11 +8,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, CreditCard, QrCode, Building2, User, Calendar, Receipt } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const PaymentComplete = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const { serviceType, formData, uploadedFiles, totalAmount } = location.state || {};
   
@@ -86,35 +88,42 @@ const PaymentComplete = () => {
 
   const handleSubmitPayment = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to submit payment details.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // Create payment record
-      const paymentRecord = {
-        id: Date.now().toString(),
-        serviceType,
-        serviceName,
-        clientData: formData,
-        paymentDetails: paymentData,
-        totalAmount: pricing?.price,
-        status: 'pending_verification',
-        createdAt: new Date().toISOString(),
-        uploadedFiles: uploadedFiles?.map((file: File) => file.name) || []
-      };
+      const { error } = await supabase
+        .from('payment_records')
+        .insert({
+          user_id: user.id,
+          service_type: serviceType,
+          service_name: serviceName,
+          client_data: formData,
+          payment_details: paymentData,
+          total_amount: pricing?.price || totalAmount,
+          status: 'pending_verification',
+          uploaded_files: uploadedFiles?.map((file: File) => file.name) || []
+        });
 
-      // Store payment record in localStorage (in real app, this would go to backend)
-      const existingPayments = JSON.parse(localStorage.getItem('paymentRecords') || '[]');
-      existingPayments.push(paymentRecord);
-      localStorage.setItem('paymentRecords', JSON.stringify(existingPayments));
+      if (error) throw error;
 
       toast({
         title: "Payment Submitted Successfully!",
         description: "Your payment details have been submitted. We'll verify and confirm within 24 hours.",
       });
 
-      // Navigate to dashboard or confirmation page
       navigate('/dashboard');
     } catch (error) {
+      console.error('Error submitting payment:', error);
       toast({
         title: "Submission Failed",
         description: "Failed to submit payment details. Please try again.",

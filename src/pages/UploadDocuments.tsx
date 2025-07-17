@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,10 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, FileText, Upload, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const UploadDocuments = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const [formData, setFormData] = useState({
     clientName: "",
@@ -36,6 +38,15 @@ const UploadDocuments = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to upload documents.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (!selectedFile) {
       toast({
         title: "No File Selected",
@@ -47,32 +58,40 @@ const UploadDocuments = () => {
 
     setUploading(true);
     
-    // Simulate file upload delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Save to localStorage
-    const existingDocuments = JSON.parse(localStorage.getItem('documents') || '[]');
-    const newDocument = {
-      id: Date.now().toString(),
-      fileName: selectedFile.name,
-      fileSize: (selectedFile.size / 1024).toFixed(2) + ' KB',
-      fileType: selectedFile.type || 'application/octet-stream',
-      ...formData,
-      status: 'pending',
-      uploadDate: new Date().toISOString()
-    };
-    
-    existingDocuments.push(newDocument);
-    localStorage.setItem('documents', JSON.stringify(existingDocuments));
-    
-    setUploading(false);
-    
-    toast({
-      title: "Document Uploaded!",
-      description: "Your document has been uploaded successfully.",
-    });
-    
-    navigate('/dashboard');
+    try {
+      const { error } = await supabase
+        .from('documents')
+        .insert({
+          user_id: user.id,
+          file_name: selectedFile.name,
+          file_size: (selectedFile.size / 1024).toFixed(2) + ' KB',
+          file_type: selectedFile.type || 'application/octet-stream',
+          client_name: formData.clientName,
+          email: formData.email,
+          phone: formData.phone,
+          document_type: formData.documentType,
+          description: formData.description,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Document Uploaded!",
+        description: "Your document has been uploaded successfully.",
+      });
+      
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload document. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

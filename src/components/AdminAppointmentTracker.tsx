@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calendar, Clock, Phone, Mail, User, Download } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface AppointmentData {
   id: string;
@@ -16,33 +18,76 @@ interface AppointmentData {
   time: string;
   message: string;
   status: "scheduled" | "completed" | "cancelled";
-  createdAt: string;
+  created_at: string;
 }
 
 const AdminAppointmentTracker = () => {
   const [appointments, setAppointments] = useState<AppointmentData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    // Load appointments from localStorage
-    const loadAppointments = () => {
-      const stored = localStorage.getItem('appointments');
-      if (stored) {
-        setAppointments(JSON.parse(stored));
-      }
-    };
-
     loadAppointments();
-    // Refresh every 5 seconds to simulate real-time updates
-    const interval = setInterval(loadAppointments, 5000);
-    return () => clearInterval(interval);
+    
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('appointments-changes')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'appointments'
+      }, () => {
+        loadAppointments();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
-  const updateStatus = (id: string, newStatus: "scheduled" | "completed" | "cancelled") => {
-    const updatedAppointments = appointments.map(apt => 
-      apt.id === id ? { ...apt, status: newStatus } : apt
-    );
-    setAppointments(updatedAppointments);
-    localStorage.setItem('appointments', JSON.stringify(updatedAppointments));
+  const loadAppointments = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setAppointments(data || []);
+    } catch (error) {
+      console.error('Error loading appointments:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load appointments",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id: string, newStatus: "scheduled" | "completed" | "cancelled") => {
+    try {
+      const { error } = await supabase
+        .from('appointments')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Status Updated",
+        description: `Appointment status updated to ${newStatus}`,
+      });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update appointment status",
+        variant: "destructive"
+      });
+    }
   };
 
   const exportData = () => {
@@ -63,6 +108,17 @@ const AdminAppointmentTracker = () => {
     };
     return <Badge variant={variants[status] || "default"}>{status}</Badge>;
   };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="p-8 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-sm text-gray-600 mt-2">Loading appointments...</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>

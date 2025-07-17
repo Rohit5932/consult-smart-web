@@ -14,6 +14,144 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          created_at: string
+          date: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string
+          service: string
+          status: string | null
+          time: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone: string
+          service: string
+          status?: string | null
+          time: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string
+          service?: string
+          status?: string | null
+          time?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          client_name: string
+          created_at: string
+          description: string | null
+          document_type: string | null
+          email: string | null
+          file_name: string
+          file_size: string
+          file_type: string
+          id: string
+          phone: string | null
+          status: string | null
+          updated_at: string
+          upload_date: string
+          user_id: string | null
+        }
+        Insert: {
+          client_name: string
+          created_at?: string
+          description?: string | null
+          document_type?: string | null
+          email?: string | null
+          file_name: string
+          file_size: string
+          file_type: string
+          id?: string
+          phone?: string | null
+          status?: string | null
+          updated_at?: string
+          upload_date?: string
+          user_id?: string | null
+        }
+        Update: {
+          client_name?: string
+          created_at?: string
+          description?: string | null
+          document_type?: string | null
+          email?: string | null
+          file_name?: string
+          file_size?: string
+          file_type?: string
+          id?: string
+          phone?: string | null
+          status?: string | null
+          updated_at?: string
+          upload_date?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      payment_records: {
+        Row: {
+          client_data: Json
+          created_at: string
+          id: string
+          payment_details: Json
+          service_name: string
+          service_type: string
+          status: string | null
+          total_amount: string
+          updated_at: string
+          uploaded_files: string[] | null
+          user_id: string | null
+        }
+        Insert: {
+          client_data: Json
+          created_at?: string
+          id?: string
+          payment_details: Json
+          service_name: string
+          service_type: string
+          status?: string | null
+          total_amount: string
+          updated_at?: string
+          uploaded_files?: string[] | null
+          user_id?: string | null
+        }
+        Update: {
+          client_data?: Json
+          created_at?: string
+          id?: string
+          payment_details?: Json
+          service_name?: string
+          service_type?: string
+          status?: string | null
+          total_amount?: string
+          updated_at?: string
+          uploaded_files?: string[] | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -41,6 +179,54 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      service_requests: {
+        Row: {
+          company: string | null
+          created_at: string
+          data: Json | null
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string
+          service_type: string
+          status: string | null
+          updated_at: string
+          urgency: string | null
+          user_id: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          data?: Json | null
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone: string
+          service_type: string
+          status?: string | null
+          updated_at?: string
+          urgency?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          data?: Json | null
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string
+          service_type?: string
+          status?: string | null
+          updated_at?: string
+          urgency?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }

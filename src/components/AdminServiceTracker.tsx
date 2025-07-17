@@ -1,45 +1,93 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FileText, Download, User, Clock } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface ServiceRequest {
   id: string;
-  serviceType: string;
+  service_type: string;
   name: string;
   email: string;
   phone: string;
-  company: string;
+  company?: string;
   urgency: string;
-  message: string;
+  message?: string;
   status: "pending" | "processing" | "completed";
-  createdAt: string;
+  created_at: string;
 }
 
 const AdminServiceTracker = () => {
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const loadRequests = () => {
-      const stored = localStorage.getItem('serviceRequests');
-      if (stored) {
-        setRequests(JSON.parse(stored));
-      }
-    };
-
     loadRequests();
-    const interval = setInterval(loadRequests, 5000);
-    return () => clearInterval(interval);
+    
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('service-requests-changes')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'service_requests'
+      }, () => {
+        loadRequests();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
-  const updateStatus = (id: string, newStatus: "pending" | "processing" | "completed") => {
-    const updatedRequests = requests.map(req => 
-      req.id === id ? { ...req, status: newStatus } : req
-    );
-    setRequests(updatedRequests);
-    localStorage.setItem('serviceRequests', JSON.stringify(updatedRequests));
+  const loadRequests = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('service_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setRequests(data || []);
+    } catch (error) {
+      console.error('Error loading service requests:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load service requests",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id: string, newStatus: "pending" | "processing" | "completed") => {
+    try {
+      const { error } = await supabase
+        .from('service_requests')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Status Updated",
+        description: `Service request status updated to ${newStatus}`,
+      });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update service request status",
+        variant: "destructive"
+      });
+    }
   };
 
   const exportData = () => {
@@ -86,22 +134,16 @@ const AdminServiceTracker = () => {
     "loan-precheck": "Loan Pre-check"
   };
 
-  const getDeadline = (request: ServiceRequest) => {
-    const createdDate = new Date(request.createdAt);
-    const urgencyDays = {
-      'immediate': 2,
-      'urgent': 5,
-      'normal': 10
-    };
-    const days = urgencyDays[request.urgency as keyof typeof urgencyDays] || 10;
-    createdDate.setDate(createdDate.getDate() + days);
-    return createdDate;
-  };
-
-  const isOverdue = (request: ServiceRequest) => {
-    if (request.status === 'completed') return false;
-    return new Date() > getDeadline(request);
-  };
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="p-8 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-sm text-gray-600 mt-2">Loading service requests...</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -166,7 +208,7 @@ const AdminServiceTracker = () => {
                             {request.name}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {serviceTypeNames[request.serviceType] || request.serviceType}
+                            {serviceTypeNames[request.service_type] || request.service_type}
                           </div>
                           {request.company && (
                             <div className="text-xs text-gray-400">{request.company}</div>
@@ -185,7 +227,7 @@ const AdminServiceTracker = () => {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4" />
-                          {new Date(request.createdAt).toLocaleDateString()}
+                          {new Date(request.created_at).toLocaleDateString()}
                         </div>
                       </TableCell>
                       <TableCell>{getStatusBadge(request.status)}</TableCell>

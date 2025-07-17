@@ -5,39 +5,86 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FileText, Download, User } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface DocumentData {
   id: string;
-  fileName: string;
-  fileSize: string;
-  fileType: string;
+  file_name: string;
+  file_size: string;
+  file_type: string;
   status: "pending" | "processing" | "completed";
-  uploadDate: string;
-  clientName: string;
+  upload_date: string;
+  client_name: string;
 }
 
 const AdminDocumentTracker = () => {
   const [documents, setDocuments] = useState<DocumentData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const loadDocuments = () => {
-      const stored = localStorage.getItem('documents');
-      if (stored) {
-        setDocuments(JSON.parse(stored));
-      }
-    };
-
     loadDocuments();
-    const interval = setInterval(loadDocuments, 5000);
-    return () => clearInterval(interval);
+    
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('documents-changes')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'documents'
+      }, () => {
+        loadDocuments();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
-  const updateStatus = (id: string, newStatus: "pending" | "processing" | "completed") => {
-    const updatedDocuments = documents.map(doc => 
-      doc.id === id ? { ...doc, status: newStatus } : doc
-    );
-    setDocuments(updatedDocuments);
-    localStorage.setItem('documents', JSON.stringify(updatedDocuments));
+  const loadDocuments = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setDocuments(data || []);
+    } catch (error) {
+      console.error('Error loading documents:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load documents",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id: string, newStatus: "pending" | "processing" | "completed") => {
+    try {
+      const { error } = await supabase
+        .from('documents')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Status Updated",
+        description: `Document status updated to ${newStatus}`,
+      });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update document status",
+        variant: "destructive"
+      });
+    }
   };
 
   const exportData = () => {
@@ -58,6 +105,17 @@ const AdminDocumentTracker = () => {
     };
     return <Badge variant={variants[status] || "default"}>{status}</Badge>;
   };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="p-8 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-sm text-gray-600 mt-2">Loading documents...</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -118,22 +176,22 @@ const AdminDocumentTracker = () => {
                         <div>
                           <div className="flex items-center gap-2 font-medium">
                             <User className="h-4 w-4" />
-                            {document.clientName}
+                            {document.client_name}
                           </div>
                           <div className="text-sm text-gray-500 flex items-center gap-2">
                             <FileText className="h-3 w-3" />
-                            {document.fileName}
+                            {document.file_name}
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
-                          <div>{document.fileSize}</div>
-                          <div className="text-gray-500">{document.fileType}</div>
+                          <div>{document.file_size}</div>
+                          <div className="text-gray-500">{document.file_type}</div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        {new Date(document.uploadDate).toLocaleDateString()}
+                        {new Date(document.upload_date).toLocaleDateString()}
                       </TableCell>
                       <TableCell>{getStatusBadge(document.status)}</TableCell>
                       <TableCell>

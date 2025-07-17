@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,10 +7,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const BookAppointment = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const [formData, setFormData] = useState({
     name: "",
@@ -22,6 +24,8 @@ const BookAppointment = () => {
     time: "",
     message: ""
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const services = [
     "GST Filing",
@@ -37,27 +41,53 @@ const BookAppointment = () => {
     "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Save to localStorage
-    const existingAppointments = JSON.parse(localStorage.getItem('appointments') || '[]');
-    const newAppointment = {
-      id: Date.now().toString(),
-      ...formData,
-      status: 'scheduled',
-      createdAt: new Date().toISOString()
-    };
-    
-    existingAppointments.push(newAppointment);
-    localStorage.setItem('appointments', JSON.stringify(existingAppointments));
-    
-    toast({
-      title: "Appointment Booked!",
-      description: "Your appointment has been scheduled successfully.",
-    });
-    
-    navigate('/dashboard');
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to book an appointment.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('appointments')
+        .insert({
+          user_id: user.id,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+          message: formData.message,
+          status: 'scheduled'
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Appointment Booked!",
+        description: "Your appointment has been scheduled successfully.",
+      });
+      
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      toast({
+        title: "Booking Failed",
+        description: "Failed to book appointment. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -215,10 +245,11 @@ const BookAppointment = () => {
 
                 <Button 
                   type="submit" 
+                  disabled={isSubmitting}
                   className="w-full py-6 text-lg rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300"
                 >
                   <Clock className="h-5 w-5 mr-2" />
-                  Book Appointment
+                  {isSubmitting ? "Booking..." : "Book Appointment"}
                 </Button>
               </form>
             </CardContent>
