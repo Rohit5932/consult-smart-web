@@ -1,26 +1,35 @@
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { 
-  FileText, 
-  Calendar, 
-  CreditCard, 
-  Upload, 
-  Settings, 
-  User,
-  Shield,
-  BarChart3 
-} from "lucide-react";
-import Navigation from "@/components/Navigation";
-import AdminPromotion from "@/components/AdminPromotion";
+import { useAuth } from "@/contexts/AuthContext";
+import { LogOut, FileText, Calendar, Upload, CreditCard, Settings } from "lucide-react";
 
 const Dashboard = () => {
-  const { user, profile, loading } = useAuth();
+  const navigate = useNavigate();
+  const { signOut, user, profile, loading } = useAuth();
 
   console.log('Dashboard - user:', user?.id, 'profile:', profile, 'loading:', loading);
 
+  useEffect(() => {
+    if (!loading && !user) {
+      console.log('No user found, redirecting to auth');
+      navigate('/auth');
+    }
+  }, [user, loading, navigate]);
+
+  const handleLogout = async () => {
+    try {
+      console.log('Logging out...');
+      await signOut();
+      navigate('/auth');
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  // Show loading spinner while checking authentication
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
@@ -29,166 +38,115 @@ const Dashboard = () => {
     );
   }
 
+  // Don't render anything if no user (will redirect)
   if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
-        <Card>
-          <CardContent className="pt-6">
-            <p>Please sign in to access your dashboard.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return null;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      <Navigation />
-      
+      {/* Header */}
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
+              TaxConsult Pro Dashboard
+            </h1>
+            <div className="flex items-center space-x-2">
+              {profile?.role === 'admin' && (
+                <Button variant="outline" onClick={() => navigate('/admin')}>
+                  <Settings className="h-4 w-4 mr-2" />
+                  Admin Panel
+                </Button>
+              )}
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto space-y-8">
-          {/* Welcome Section */}
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Welcome Message */}
           <Card className="bg-gradient-to-r from-blue-500 to-orange-500 text-white">
             <CardHeader>
-              <CardTitle className="text-2xl md:text-3xl">
-                Welcome back, {profile?.full_name || 'User'}!
-              </CardTitle>
+              <CardTitle>Welcome, {profile?.full_name || user.email}</CardTitle>
               <CardDescription className="text-blue-100">
-                Manage your tax services and track your progress from your dashboard.
+                Manage your tax and business consulting needs from your dashboard
               </CardDescription>
             </CardHeader>
           </Card>
 
-          {/* Admin Promotion Card (only for non-admin users) */}
-          <AdminPromotion />
-
-          {/* Quick Actions Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Service Request */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <FileText className="h-8 w-8 text-blue-600" />
-                  <div>
-                    <CardTitle className="text-lg">Request Service</CardTitle>
-                    <CardDescription>Start a new tax service request</CardDescription>
-                  </div>
-                </div>
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/service-form')}>
+              <CardHeader className="text-center">
+                <FileText className="h-8 w-8 mx-auto text-blue-600 mb-2" />
+                <CardTitle className="text-lg">Request Service</CardTitle>
+                <CardDescription>Submit a new service request</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Button asChild className="w-full">
-                  <Link to="/services">Browse Services</Link>
-                </Button>
-              </CardContent>
             </Card>
 
-            {/* Book Appointment */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Calendar className="h-8 w-8 text-green-600" />
-                  <div>
-                    <CardTitle className="text-lg">Book Appointment</CardTitle>
-                    <CardDescription>Schedule a consultation</CardDescription>
-                  </div>
-                </div>
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/book-appointment')}>
+              <CardHeader className="text-center">
+                <Calendar className="h-8 w-8 mx-auto text-green-600 mb-2" />
+                <CardTitle className="text-lg">Book Appointment</CardTitle>
+                <CardDescription>Schedule a consultation</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Button asChild className="w-full" variant="outline">
-                  <Link to="/book-appointment">Schedule Now</Link>
-                </Button>
-              </CardContent>
             </Card>
 
-            {/* Upload Documents */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Upload className="h-8 w-8 text-orange-600" />
-                  <div>
-                    <CardTitle className="text-lg">Upload Documents</CardTitle>
-                    <CardDescription>Share your tax documents securely</CardDescription>
-                  </div>
-                </div>
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/upload-documents')}>
+              <CardHeader className="text-center">
+                <Upload className="h-8 w-8 mx-auto text-orange-600 mb-2" />
+                <CardTitle className="text-lg">Upload Documents</CardTitle>
+                <CardDescription>Share required documents</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Button asChild className="w-full" variant="outline">
-                  <Link to="/upload-documents">Upload Files</Link>
-                </Button>
-              </CardContent>
             </Card>
 
-            {/* My Data */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <User className="h-8 w-8 text-purple-600" />
-                  <div>
-                    <CardTitle className="text-lg">My Data</CardTitle>
-                    <CardDescription>View your submissions and history</CardDescription>
-                  </div>
-                </div>
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/payment')}>
+              <CardHeader className="text-center">
+                <CreditCard className="h-8 w-8 mx-auto text-purple-600 mb-2" />
+                <CardTitle className="text-lg">Make Payment</CardTitle>
+                <CardDescription>Complete your payment</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Button asChild className="w-full" variant="outline">
-                  <Link to="/user-dashboard">View Data</Link>
-                </Button>
-              </CardContent>
             </Card>
-
-            {/* Payment */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <CreditCard className="h-8 w-8 text-red-600" />
-                  <div>
-                    <CardTitle className="text-lg">Make Payment</CardTitle>
-                    <CardDescription>Pay for your services</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Button asChild className="w-full" variant="outline">
-                  <Link to="/payment">Pay Now</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Admin Panel (only for admins) */}
-            {profile?.role === 'admin' && (
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer border-orange-200 bg-orange-50">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <Shield className="h-8 w-8 text-orange-600" />
-                    <div>
-                      <CardTitle className="text-lg text-orange-800">Admin Panel</CardTitle>
-                      <CardDescription className="text-orange-700">Manage users and services</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <Button asChild className="w-full bg-orange-600 hover:bg-orange-700">
-                    <Link to="/admin">
-                      <BarChart3 className="h-4 w-4 mr-2" />
-                      Admin Dashboard
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
           </div>
 
-          {/* Recent Activity */}
+          {/* Services Overview */}
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Your latest interactions with our services</CardDescription>
+              <CardTitle>Our Services</CardTitle>
+              <CardDescription>Explore our comprehensive range of tax and business services</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No recent activity to display.</p>
-                <p className="text-sm">Start by requesting a service or booking an appointment.</p>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-semibold text-blue-600">Tax Services</h3>
+                    <p className="text-sm text-muted-foreground">ITR Filing, GST Registration & Filing, Tax Planning</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-semibold text-green-600">Business Services</h3>
+                    <p className="text-sm text-muted-foreground">Company Registration, Business Licenses, Compliance</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-semibold text-orange-600">Consultation</h3>
+                    <p className="text-sm text-muted-foreground">Expert advice on tax and business matters</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h3 className="font-semibold text-purple-600">Documentation</h3>
+                    <p className="text-sm text-muted-foreground">Document preparation and verification</p>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => navigate('/services')}
+                >
+                  View All Services
+                </Button>
               </div>
             </CardContent>
           </Card>

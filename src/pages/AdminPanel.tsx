@@ -81,7 +81,9 @@ const AdminPanel = () => {
       }
     };
 
-    loadCounts();
+    if (profile?.role === 'admin') {
+      loadCounts();
+    }
   }, [profile, navigate]);
 
   const handleLogout = async () => {

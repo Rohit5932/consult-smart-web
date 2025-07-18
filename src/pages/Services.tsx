@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -127,6 +126,14 @@ const Services = () => {
     }
   ];
 
+  const handleLearnMore = (serviceId: string) => {
+    navigate(`/services/${serviceId}`);
+  };
+
+  const handleApplyNow = (serviceId: string) => {
+    navigate('/service-form', { state: { serviceType: serviceId } });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -165,8 +172,7 @@ const Services = () => {
               return (
                 <Card 
                   key={service.id} 
-                  className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-lg overflow-hidden"
-                  onClick={() => navigate(`/services/${service.id}`)}
+                  className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white/80 backdrop-blur-sm border-0 shadow-lg overflow-hidden"
                 >
                   <div className="h-2 bg-gradient-to-r from-primary to-primary/80" />
                   
@@ -199,19 +205,13 @@ const Services = () => {
                       <Button 
                         variant="outline"
                         className="flex-1 border-2 border-primary/20 hover:border-primary/40 text-primary font-semibold py-3 rounded-full transition-all duration-300"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/services/${service.id}`);
-                        }}
+                        onClick={() => handleLearnMore(service.id)}
                       >
                         Learn More
                       </Button>
                       <Button 
                         className="flex-1 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold py-3 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate('/service-form', { state: { serviceType: service.id } });
-                        }}
+                        onClick={() => handleApplyNow(service.id)}
                       >
                         Apply Now
                       </Button>
